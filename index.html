@@ -5,14 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Glow Cart - Shop the Digital Universe</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://js.stripe.com/v3/"></script>
   <style>
-    :root {
-      --neon-cyan: rgba(0, 255, 255, 0.8);
-      --neon-pink: rgba(255, 0, 255, 0.8);
-      --neon-purple: rgba(170, 0, 255, 0.8);
-    }
-    
     body {
       background: linear-gradient(180deg, #0a0a23 0%, #1a1a3a 100%);
       min-height: 100vh;
@@ -20,60 +14,39 @@
       color: white;
       font-family: 'Inter', sans-serif;
     }
-
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-
-    .neon-glow-cyan {
-      box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px rgba(0, 255, 255, 0.4);
+    .neon-glow {
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
     }
-    
-    .neon-glow-pink {
-      box-shadow: 0 0 10px var(--neon-pink), 0 0 20px rgba(255, 0, 255, 0.4);
-    }
-    
-    .neon-glow-purple {
-      box-shadow: 0 0 10px var(--neon-purple), 0 0 20px rgba(170, 0, 255, 0.4);
-    }
-
     .card-3d {
       perspective: 1000px;
-      transition: all 0.3s ease;
-      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
     }
-
     .card-3d:hover {
       transform: rotateY(10deg) rotateX(5deg) scale(1.05);
     }
-    
-    .product-card:hover {
-      transform: translateY(-5px);
-    }
-
     .grid-bg {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
+      ширица: 100%;
       height: 100%;
-      background-image: 
-        radial-gradient(circle at 25% 25%, rgba(0, 255, 255, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 75% 75%, rgba(255, 0, 255, 0.05) 0%, transparent 50%),
-        linear-gradient(
+      background-image: linear-gradient(
           0deg,
           transparent 24%,
-          rgba(0, 255, 255, 0.05) 25%,
+          rgba(0, 255, 255, 0.1) 25%,
           transparent 27%,
           transparent 74%,
-          rgba(0, 255, 255, 0.05) 75%,
+          rgba(0, 255, 255, 0.1) 75%,
           transparent 77%
         ),
         linear-gradient(
           90deg,
           transparent 24%,
-          rgba(255, 0, 255, 0.05) 25%,
+          rgba(0, 255, 255, 0.1) 25%,
           transparent 27%,
           transparent 74%,
-          rgba(255, 0, 255, 0.05) 75%,
+          rgba(0, 255, 255, 0.1) 75%,
           transparent 77%
         );
       background-size: 50px 50px;
@@ -81,418 +54,167 @@
       opacity: 0.3;
       animation: gridMove 20s linear infinite;
     }
-
     @keyframes gridMove {
       0% { background-position: 0 0; }
       100% { background-position: 50px 50px; }
     }
-
     .header-text {
       animation: pulse 2s infinite;
     }
-    
-    .category-pill {
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
+      50% { text-shadow: 0 0 20px rgba(0, 255, 255, 1); }
+      100% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
+    }
+    .download-btn {
+      background: linear-gradient(45deg, #00f2fe, #4facfe);
       transition: all 0.3s ease;
     }
-    
-    .category-pill:hover {
-      transform: scale(1.1);
-    }
-
-    @keyframes pulse {
-      0%, 100% { 
-        text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-pink); 
-      }
-      50% { 
-        text-shadow: 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-pink); 
-      }
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    
-    .floating {
-      animation: float 6s ease-in-out infinite;
-    }
-    
-    .download-reveal {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease-out;
-    }
-    
-    .download-reveal.show {
-      max-height: 500px;
-    }
-    
-    .star {
-      position: absolute;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle var(--duration) infinite ease-in-out;
-      opacity: 0;
-    }
-    
-    @keyframes twinkle {
-      0%, 100% { opacity: 0; }
-      50% { opacity: var(--opacity); }
-    }
-    
-    .checkout-modal {
-      backdrop-filter: blur(10px);
-      background: rgba(10, 10, 35, 0.9);
+    .download-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.7);
     }
   </style>
 </head>
 <body>
   <div class="grid-bg"></div>
-  <div id="stars-container"></div>
   <div id="root"></div>
 
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-  <script src="https://js.stripe.com/v3/"></script>
 
   <script type="text/babel">
     const { useState, useEffect } = React;
-    
-    // Stripe initialization
-    const stripePromise = window.Stripe ? window.Stripe('pk_test_51O...') : null;
 
     const products = [
-      { 
-        id: 1, 
-        title: "Quantum Blueprint", 
-        price: 9.99, 
-        category: "Design", 
-        description: "Futuristic design templates for your next project with responsive layouts and modern aesthetics.",
-        image: "https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=2232&auto=format&fit=crop",
-        fileUrl: "#"
-      },
-      { 
-        id: 2, 
-        title: "Neon Soundwave", 
-        price: 4.99, 
-        category: "Audio", 
-        description: "Cyberpunk inspired sound effects and loops perfect for games and videos.",
-        image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2340&auto=format&fit=crop",
-        fileUrl: "#"
-      },
-      { 
-        id: 3, 
-        title: "Cosmic Template Pack", 
-        price: 14.99, 
-        category: "Templates", 
-        description: "Collection of 10 cosmic-themed templates for presentations and websites.",
-        image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2213&auto=format&fit=crop",
-        fileUrl: "#"
-      },
-      { 
-        id: 4, 
-        title: "Digital Universe Art Pack", 
-        price: 19.99, 
-        category: "Art", 
-        description: "High-resolution digital art collection featuring space and cyber themes.",
-        image: "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?q=80&w=2340&auto=format&fit=crop",
-        fileUrl: "#"
-      },
-      { 
-        id: 5, 
-        title: "VR Interface Kit", 
-        price: 24.99, 
-        category: "UI Kits", 
-        description: "Complete set of futuristic UI elements for virtual reality applications.",
-        image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2340&auto=format&fit=crop",
-        fileUrl: "#"
-      },
-      { 
-        id: 6, 
-        title: "Cyberpunk E-book Bundle", 
-        price: 12.99, 
-        category: "E-books", 
-        description: "Collection of 3 cyberpunk themed short stories in PDF and EPUB formats.",
-        image: "https://images.unsplash.com/photo-1589998059171-988d887df646?q=80&w=2352&auto=format&fit=crop",
-        fileUrl: "#"
-      }
+      { id: 1, title: "Quantum Blueprint", price: 9.99, category: "Design", image: "https://via.placeholder.com/300x200", fileUrl: "https://example.com/quantum-blueprint.pdf" },
+      { id: 2, title: "Neon Soundwave", price: 4.99, category: "Audio", image: "https://via.placeholder.com/300x200", fileUrl: "https://example.com/neon-soundwave.mp3" },
+      { id: 3, title: "Cosmic Template", price: 14.99, category: "Template", image: "https://via.placeholder.com/300x200", fileUrl: "https://example.com/cosmic-template.zip" },
+      { id: 4, title: "Digital Art Pack", price: 19.99, category: "Art", image: "https://via.placeholder.com/300x200", fileUrl: "https://example.com/digital-art-pack.zip" }
     ];
-    
-    const categories = [...new Set(products.map(product => product.category))];
-    categories.unshift("All");
 
     function App() {
       const [cart, setCart] = useState([]);
-      const [activeCategory, setActiveCategory] = useState("All");
-      const [checkoutOpen, setCheckoutOpen] = useState(false);
-      const [purchaseComplete, setPurchaseComplete] = useState(false);
-      const [downloadProduct, setDownloadProduct] = useState(null);
-      const [searchQuery, setSearchQuery] = useState("");
-      
-      const filteredProducts = products.filter(product => {
-        const matchesCategory = activeCategory === "All" || product.category === activeCategory;
-        const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                             product.description.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
-      });
+      const [purchasedItems, setPurchasedItems] = useState([]);
+
+      const stripe = Stripe('pk_test_YourPublicKey'); // Replace with your Stripe public key
+
+      const initiateCheckout = async (product) => {
+        try {
+          const response = await fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ product })
+          });
+          const { sessionId } = await response.json();
+          stripe.redirectToCheckout({ sessionId });
+        } catch (error) {
+          console.error('Error initiating checkout:', error);
+        }
+      };
 
       const addToCart = (product) => {
         setCart([...cart, product]);
       };
-      
-      const removeFromCart = (productId) => {
-        setCart(cart.filter(item => item.id !== productId));
-      };
-      
-      const buyNow = (product) => {
-        setCart([product]);
-        setCheckoutOpen(true);
-      };
-      
-      const handleCheckout = async () => {
-        // In a real app, you would create a Stripe checkout session
-        // For this demo, we'll simulate a successful payment
-        setTimeout(() => {
-          setPurchaseComplete(true);
-          setDownloadProduct(cart[0]); // For demo, just show first item
-          setCart([]);
-        }, 1500);
-      };
-      
-      const closeCheckout = () => {
-        setCheckoutOpen(false);
-        setPurchaseComplete(false);
-        setDownloadProduct(null);
-      };
+
+      // Simulate checking for purchased items (e.g., after redirect from Stripe)
+      useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        if (sessionId) {
+          fetch(`/api/verify-purchase/${sessionId}`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.purchased) {
+                setPurchasedItems([...purchasedItems, data.product]);
+              }
+            })
+            .catch(err => console.error('Error verifying purchase:', err));
+        }
+      }, []);
 
       return (
-        <div className="p-4 md:p-8 max-w-7xl mx-auto">
-          <header className="flex flex-col md:flex-row justify-between items-center mb-8 md:mb-12">
-            <div className="flex items-center mb-4 md:mb-0">
-              <i className="fas fa-shopping-cart text-4xl mr-3 text-cyan-400 neon-glow-cyan"></i>
-              <h1 className="text-center text-4xl md:text-5xl font-bold header-text">
-                <span className="text-cyan-400">Glow</span> <span className="text-pink-400">Cart</span>
-              </h1>
-            </div>
-            <p className="text-xl text-center md:text-right text-gray-300 italic">
-              "Shop the Digital Universe"
-            </p>
-          </header>
+        <div className="p-6 max-w-7xl mx-auto">
+          <h1 className="text-center text-4xl font-bold header-text neon-glow mb-8">Glow Cart</h1>
+          <p className="text-center text-lg text-cyan-400 mb-10">Shop the Digital Universe</p>
           
-          <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div className="flex flex-wrap gap-2">
-              {categories.map(category => (
-                <button
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
-                  className={`category-pill px-4 py-2 rounded-full text-sm font-medium ${
-                    activeCategory === category 
-                      ? 'bg-cyan-500 text-black neon-glow-cyan' 
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-            
-            <div className="relative w-full md:w-64">
-              <input
-                type="text"
-                placeholder="Search digital universe..."
-                className="w-full bg-gray-900 bg-opacity-80 border border-gray-700 rounded-lg px-4 py-2 pl-10 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {filteredProducts.map(product => (
-              <div key={product.id} className="product-card bg-gray-900 bg-opacity-80 rounded-lg p-4 neon-glow-purple hover:neon-glow-cyan transition-all duration-300">
-                <div className="relative overflow-hidden rounded-lg h-48 mb-4">
-                  <img 
-                    src={product.image} 
-                    alt={product.title} 
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-                    <span className="text-xs font-semibold px-2 py-1 bg-purple-500 rounded-full">
-                      {product.category}
-                    </span>
-                  </div>
-                </div>
-                <h2 className="text-xl font-semibold mb-2">{product.title}</h2>
-                <p className="text-gray-300 text-sm mb-4">{product.description}</p>
-                <div className="flex justify-between items-center">
-                  <p className="text-cyan-400 text-2xl font-bold">${product.price.toFixed(2)}</p>
-                  <div className="flex gap-2">
-                    <button 
-                      onClick={() => buyNow(product)}
-                      className="px-3 py-1 bg-pink-500 text-black rounded text-sm font-medium hover:bg-pink-400 neon-glow-pink"
-                    >
-                      Buy Now
-                    </button>
-                    <button 
-                      onClick={() => addToCart(product)}
-                      className="px-3 py-1 bg-cyan-500 text-black rounded text-sm font-medium hover:bg-cyan-400 neon-glow-cyan"
-                    >
-                      <i className="fas fa-cart-plus mr-1"></i> Add
-                    </button>
-                  </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.map(product => (
+              <div key={product.id} className="card-3d bg-gray-900 bg-opacity-80 rounded-lg p-4 neon-glow">
+                <img src={product.image} alt={product.title} className="w-full h-48 object-cover rounded" />
+                <h2 className="mt-4 text-xl font-semibold">{product.title}</h2>
+                <p className="text-gray-400 text-sm">{product.category}</p>
+                <p className="text-cyan-400 text-2xl font-bold mt-2">${product.price.toFixed(2)}</p>
+                <div className="mt-4 flex gap-2">
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="flex-1 bg-cyan-500 text-black px-4 py-2 rounded hover:bg-cyan-400 neon-glow"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    onClick={() => initiateCheckout(product)}
+                    className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded hover:from-cyan-400 hover:to-blue-400 neon-glow"
+                  >
+                    Buy Now
+                  </button>
                 </div>
               </div>
             ))}
           </div>
-          
-          {cart.length > 0 && (
-            <div className="fixed bottom-4 right-4 z-50">
-              <button 
-                onClick={() => setCheckoutOpen(true)}
-                className="flex items-center bg-cyan-500 text-black px-6 py-3 rounded-full font-bold shadow-lg neon-glow-cyan hover:bg-cyan-400 transition-colors"
-              >
-                <i className="fas fa-shopping-cart mr-2"></i>
-                Checkout ({cart.length}) 
-                <span className="ml-2">
-                  ${cart.reduce((total, item) => total + item.price, 0).toFixed(2)}
-                </span>
-              </button>
-            </div>
-          )}
-          
-          {/* Checkout Modal */}
-          {checkoutOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <div 
-                className="absolute inset-0 bg-black bg-opacity-70" 
-                onClick={closeCheckout}
-              ></div>
-              
-              <div className="checkout-modal relative rounded-xl overflow-hidden w-full max-w-md max-h-[90vh] overflow-y-auto">
-                <div className="p-6">
-                  <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold">
-                      {purchaseComplete ? 'Download Ready!' : 'Your Digital Cart'}
-                    </h2>
-                    <button 
-                      onClick={closeCheckout}
-                      className="text-gray-400 hover:text-white"
-                    >
-                      <i className="fas fa-times text-xl"></i>
-                    </button>
-                  </div>
-                  
-                  {!purchaseComplete ? (
-                    <>
-                      {cart.length === 0 ? (
-                        <div className="text-center py-8">
-                          <i className="fas fa-shopping-cart text-4xl text-gray-500 mb-4"></i>
-                          <p className="text-gray-400">Your cart is empty</p>
-                        </div>
-                      ) : (
-                        <>
-                          <ul className="mb-6 space-y-3">
-                            {cart.map((item, index) => (
-                              <li key={index} className="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
-                                <div>
-                                  <h3 className="font-medium">{item.title}</h3>
-                                  <p className="text-sm text-gray-400">{item.category}</p>
-                                </div>
-                                <div className="flex items-center">
-                                  <span className="text-cyan-400 font-bold mr-4">${item.price.toFixed(2)}</span>
-                                  <button 
-                                    onClick={() => removeFromCart(item.id)}
-                                    className="text-gray-400 hover:text-red-400"
-                                  >
-                                    <i className="fas fa-trash"></i>
-                                  </button>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                          
-                          <div className="border-t border-gray-700 pt-4 mb-6">
-                            <div className="flex justify-between text-lg font-bold mb-2">
-                              <span>Total:</span>
-                              <span className="text-cyan-400">
-                                ${cart.reduce((total, item) => total + item.price, 0).toFixed(2)}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <button
-                            onClick={handleCheckout}
-                            className="w-full bg-cyan-500 text-black py-3 rounded-lg font-bold neon-glow-cyan hover:bg-cyan-400 transition-colors"
-                          >
-                            Proceed to Payment
-                          </button>
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <div className="text-center py-4">
-                      <div className="text-6xl text-green-400 mb-4">
-                        <i className="fas fa-check-circle"></i>
-                      </div>
-                      <h3 className="text-xl font-bold mb-2">Payment Successful!</h3>
-                      <p className="text-gray-300 mb-6">Your digital items are ready for download</p>
-                      
-                      <div className="bg-gray-800 rounded-lg p-4 mb-6">
-                        <h4 className="font-medium mb-2">{downloadProduct.title}</h4>
-                        <button 
-                          onClick={() => alert(`Downloading: ${downloadProduct.title}`)}
-                          className="w-full bg-cyan-500 text-black py-2 rounded font-medium mt-2 neon-glow-cyan"
-                        >
-                          <i className="fas fa-download mr-2"></i> Download Now
-                        </button>
-                      </div>
-                      
-                      <p className="text-sm text-gray-400">
-                        A download link has also been sent to your email.
-                      </p>
-                    </div>
-                  )}
-                </div>
+
+          <div className="mt-10">
+            <h2 className="text-2xl font-bold neon-glow p-4 rounded">Cart Items ({cart.length})</h2>
+            {cart.length === 0 ? (
+              <p className="text-gray-400">Your cart is empty.</p>
+            ) : (
+              <div>
+                <ul className="mt-4 space-y-2">
+                  {cart.map((item, index) => (
+                    <li key={index} className="bg-gray-800 p-3 rounded flex justify-between items-center neon-glow">
+                      <span>{item.title} - ${item.price.toFixed(2)}</span>
+                      <button
+                        onClick={() => initiateCheckout(item)}
+                        className="bg-cyan-500 text-black px-3 py-1 rounded hover:bg-cyan-400"
+                      >
+                        Checkout
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => initiateCheckout(cart)}
+                  className="mt-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-6 py-3 rounded hover:from-cyan-400 hover:to-blue-400 neon-glow"
+                >
+                  Checkout All
+                </button>
               </div>
+            )}
+          </div>
+
+          {purchasedItems.length > 0 && (
+            <div className="mt-10">
+              <h2 className="text-2xl font-bold neon-glow p-4 rounded">Your Purchases</h2>
+              <ul className="mt-4 space-y-2">
+                {purchasedItems.map((item, index) => (
+                  <li key={index} className="bg-gray-800 p-3 rounded flex justify-between items-center neon-glow">
+                    <span>{item.title}</span>
+                    <a
+                      href={item.fileUrl}
+                      download
+                      className="download-btn text-black px-3 py-1 rounded"
+                    >
+                      Download
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
       );
     }
-    
-    // Create stars for background
-    function createStars() {
-      const container = document.getElementById('stars-container');
-      if (!container) return;
-      
-      container.innerHTML = '';
-      
-      for (let i = 0; i < 100; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        
-        // Random properties
-        const size = Math.random() * 3;
-        const posX = Math.random() * 100;
-        const posY = Math.random() * 100;
-        const opacity = Math.random() * 0.8 + 0.2;
-        const duration = Math.random() * 5 + 3;
-        
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
-        star.style.left = `${posX}%`;
-        star.style.top = `${posY}%`;
-        star.style.setProperty('--opacity', opacity);
-        star.style.setProperty('--duration', `${duration}s`);
-        
-        container.appendChild(star);
-      }
-    }
-    
-    // Initialize stars when DOM is loaded
-    document.addEventListener('DOMContentLoaded', createStars);
 
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
