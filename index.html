@@ -4,20 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Glow Cart - Shop the Digital Universe</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Import Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Custom Styles -->
   <style>
     body {
       background: linear-gradient(180deg, #0a0a23 0%, #1a1a3a 100%);
       min-height: 100vh;
       overflow-x: hidden;
-      color: white;
+      color: #ffffff;
       font-family: 'Inter', sans-serif;
     }
 
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-
     .neon-glow {
       box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .neon-glow:hover {
+      box-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 40px rgba(0, 255, 255, 0.6);
     }
 
     .card-3d {
@@ -73,9 +80,17 @@
       50% { text-shadow: 0 0 20px rgba(0, 255, 255, 1); }
       100% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
     }
+
+    .button-primary {
+      @apply bg-cyan-500 text-black px-6 py-2 rounded-lg hover:bg-cyan-400 transition duration-300;
+    }
+
+    .button-secondary {
+      @apply bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-500 transition duration-300;
+    }
   </style>
 </head>
-<body>
+<body class="relative">
   <div class="grid-bg"></div>
   <div id="root"></div>
 
@@ -86,13 +101,102 @@
   <script type="text/babel">
     const { useState } = React;
 
+    // Product Data
     const products = [
-      { id: 1, title: "Quantum Blueprint", price: 9.99, category: "Design", image: "https://via.placeholder.com/300x200" },
-      { id: 2, title: "Neon Soundwave", price: 4.99, category: "Audio", image: "https://via.placeholder.com/300x200" },
-      { id: 3, title: "Cosmic Template", price: 14.99, category: "Template", image: "https://via.placeholder.com/300x200" },
-      { id: 4, title: "Digital Art Pack", price: 19.99, category: "Art", image: "https://via.placeholder.com/300x200" }
+      {
+        id: 1,
+        title: "Quantum Blueprint",
+        description: "A stunning digital PDF blueprint of a futuristic cityscape, perfect for designers.",
+        price: 9.99,
+        category: "Design",
+        image: "https://via.placeholder.com/300x200?text=Quantum+Blueprint",
+        stripeLink: "https://buy.stripe.com/28oeXG5xvgle4lW9AB"
+      },
+      {
+        id: 2,
+        title: "Neon Soundwave",
+        description: "High-quality digital audio loop for creators, infused with cosmic vibes.",
+        price: 4.99,
+        category: "Audio",
+        image: "https://via.placeholder.com/300x200?text=Neon+Soundwave",
+        stripeLink: "https://buy.stripe.com/28oeXG5xvgle4lW9AB"
+      },
+      {
+        id: 3,
+        title: "Cosmic Template",
+        description: "Editable digital template for professional portfolios with a futuristic edge.",
+        price: 14.99,
+        category: "Template",
+        image: "https://via.placeholder.com/300x200?text=Cosmic+Template",
+        stripeLink: "https://buy.stripe.com/28oeXG5xvgle4lW9AB"
+      },
+      {
+        id: 4,
+        title: "Digital Art Pack",
+        description: "A curated collection of digital art assets for creative projects.",
+        price: 19.99,
+        category: "Art",
+        image: "https://via.placeholder.com/300x200?text=Digital+Art+Pack",
+        stripeLink: "https://buy.stripe.com/28oeXG5xvgle4lW9AB"
+      }
     ];
 
+    // Header Component
+    function Header() {
+      return (
+        <header className="py-8 px-4 text-center">
+          <h1 className="text-5xl font-bold header-text neon-glow mb-2">Glow Cart</h1>
+          <p className="text-xl text-cyan-300">Shop the Digital Universe</p>
+        </header>
+      );
+    }
+
+    // Product Card Component
+    function ProductCard({ product, addToCart }) {
+      return (
+        <div className="card-3d bg-gray-900 bg-opacity-80 rounded-lg p-6 neon-glow">
+          <img src={product.image} alt={product.title} className="w-full h-48 object-cover rounded-lg" />
+          <div className="mt-4">
+            <h2 className="text-xl font-semibold">{product.title}</h2>
+            <p className="text-gray-400 text-sm mt-2">{product.description}</p>
+            <p className="text-2xl font-bold text-cyan-400 mt-2">${product.price.toFixed(2)}</p>
+            <div className="mt-4 flex space-x-4">
+              <button onClick={() => addToCart(product)} className="button-primary w-full">Add to Cart</button>
+              <button onClick={() => window.location.href = product.stripeLink} className="button-secondary w-full">Buy Now</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Cart Component
+    function Cart({ cart, removeFromCart, proceedToCheckout }) {
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+      return (
+        <div className="fixed right-0 top-0 h-full w-80 bg-gray-900 bg-opacity-90 p-6 overflow-y-auto neon-glow">
+          <h2 className="text-2xl font-bold mb-4">Cart ({cart.length})</h2>
+          {cart.length === 0 ? (
+            <p className="text-gray-400">Your cart is empty.</p>
+          ) : (
+            <>
+              <ul className="space-y-4 mb-6">
+                {cart.map((item, index) => (
+                  <li key={index} className="bg-gray-800 p-3 rounded-lg flex justify-between items-center">
+                    <span>{item.title} - ${item.price.toFixed(2)}</span>
+                    <button onClick={() => removeFromCart(index)} className="text-red-500 hover:text-red-400">Remove</button>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-xl font-bold mb-4">Total: ${total.toFixed(2)}</p>
+              <button onClick={proceedToCheckout} className="button-primary w-full">Checkout</button>
+            </>
+          )}
+        </div>
+      );
+    }
+
+    // Main App Component
     function App() {
       const [cart, setCart] = useState([]);
 
@@ -100,40 +204,41 @@
         setCart([...cart, product]);
       };
 
+      const removeFromCart = (index) => {
+        const newCart = [...cart];
+        newCart.splice(index, 1);
+        setCart(newCart);
+      };
+
+      const proceedToCheckout = () => {
+        const stripeLink = cart.length > 0 ? cart[0].stripeLink : "https://buy.stripe.com/28oeXG5xvgle4lW9AB";
+        window.location.href = stripeLink;
+        // Note: This uses a static Stripe link. For multi-item checkout, a backend is required to create a dynamic session.
+      };
+
       return (
-        <div className="p-6">
-          <h1 className="text-center text-4xl font-bold header-text neon-glow mb-8">Glow Cart</h1>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map(product => (
-              <div key={product.id} className="card-3d bg-gray-900 bg-opacity-80 rounded-lg p-4 neon-glow">
-                <img src={product.image} alt={product.title} className="w-full h-48 object-cover rounded" />
-                <h2 className="mt-4 text-xl font-semibold">{product.title}</h2>
-                <p className="text-cyan-400 text-2xl font-bold mt-2">${product.price.toFixed(2)}</p>
-                <button onClick={() => addToCart(product)} className="mt-4 bg-cyan-500 text-black px-4 py-2 rounded hover:bg-cyan-400 neon-glow">
-                  Add to Cart
-                </button>
-              </div>
-            ))}
-          </div>
-          <div className="mt-10">
-            <h2 className="text-2xl font-bold">Cart Items ({cart.length})</h2>
-            {cart.length === 0 ? (
-              <p className="text-gray-400">Your cart is empty.</p>
-            ) : (
-              <ul className="mt-4 space-y-2">
-                {cart.map((item, index) => (
-                  <li key={index} className="bg-gray-800 p-3 rounded flex justify-between items-center">
-                    {item.title} - ${item.price.toFixed(2)}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+        <div className="relative min-h-screen">
+          <Header />
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h2 className="text-3xl font-semibold mb-8 text-center">Explore the Universe</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} addToCart={addToCart} />
+              ))}
+            </div>
+          </main>
+          <Cart cart={cart} removeFromCart={removeFromCart} proceedToCheckout={proceedToCheckout} />
         </div>
       );
     }
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    // Render the App with Error Handling
+    try {
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    } catch (error) {
+      console.error('Rendering error:', error);
+      document.getElementById('root').innerHTML = '<div class="text-center text-red-500 p-4">Error loading Glow Cart. Check console for details.</div>';
+    }
   </script>
 </body>
 </html>
