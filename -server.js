@@ -2,7 +2,7 @@ const express = require('express');
 const Stripe = require('stripe');
 const cors = require('cors');
 const app = express();
-const stripe = Stripe('sk_test_YourSecretKey'); // Replace with your Stripe secret key
+const stripe = Stripe('https://buy.stripe.com/28oeXG5xvgle4lW9AB'); // Replace with your Stripe secret key
 
 app.use(cors());
 app.use(express.json());
@@ -43,7 +43,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
 
 app.post('/api/webhook', express.raw({ type: 'application/json' }), (req, res) => {
   const sig = req.headers['stripe-signature'];
-  const webhookSecret = 'whsec_YourWebhookSecret'; // Replace with your Stripe webhook secret
+  const webhookSecret = 'whsec_d4cbd98018e88673db26fceb4e1a3cc78b933554f1a813b5b6185582fe77657c'; // Replace with your Stripe webhook secret
 
   let event;
   try {
