@@ -8,7 +8,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Custom CSS for Neon and 3D Effects -->
   <style>
-    /* Cosmic Background */
     body {
       background: linear-gradient(180deg, #0a0a23 0%, #1a1a3a 100%);
       min-height: 100vh;
@@ -16,74 +15,39 @@
       color: white;
       font-family: sans-serif;
     }
-
-    /* Neon Glow Effect */
     .neon-glow {
       box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
       transition: box-shadow 0.3s ease;
     }
-
     .neon-glow:hover {
       box-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 40px rgba(0, 255, 255, 0.6);
     }
-
-    /* 3D Card Tilt */
     .card-3d {
       perspective: 1000px;
       transition: transform 0.3s ease;
     }
-
     .card-3d:hover {
       transform: rotateY(10deg) rotateX(10deg) scale(1.05);
     }
-
-    /* Glowing Grid Background */
     .grid-bg {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: linear-gradient(
-          0deg,
-          transparent 24%,
-          rgba(0, 255, 255, 0.1) 25%,
-          rgba(0, 255, 255, 0.1) 26%,
-          transparent 27%,
-          transparent 74%,
-          rgba(0, 255, 255, 0.1) 75%,
-          rgba(0, 255, 255, 0.1) 76%,
-          transparent 77%,
-          transparent
-        ),
-        linear-gradient(
-          90deg,
-          transparent 24%,
-          rgba(0, 255, 255, 0.1) 25%,
-          rgba(0, 255, 255, 0.1) 26%,
-          transparent 27%,
-          transparent 74%,
-          rgba(0, 255, 255, 0.1) 75%,
-          rgba(0, 255, 255, 0.1) 76%,
-          transparent 77%,
-          transparent
-        );
+      background-image: linear-gradient(0deg, transparent 24%, rgba(0, 255, 255, 0.1) 25%, rgba(0, 255, 255, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.1) 75%, rgba(0, 255, 255, 0.1) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 255, 255, 0.1) 25%, rgba(0, 255, 255, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.1) 75%, rgba(0, 255, 255, 0.1) 76%, transparent 77%, transparent);
       background-size: 50px 50px;
       z-index: -1;
       opacity: 0.3;
       animation: gridMove 20s linear infinite;
     }
-
     @keyframes gridMove {
       0% { background-position: 0 0; }
       100% { background-position: 50px 50px; }
     }
-
-    /* Cosmic Header Animation */
     .header-text {
       animation: pulse 2s infinite;
     }
-
     @keyframes pulse {
       0% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
       50% { text-shadow: 0 0 20px rgba(0, 255, 255, 1); }
@@ -92,168 +56,79 @@
   </style>
 </head>
 <body>
-  <!-- Cosmic Grid Background -->
   <div class="grid-bg"></div>
-
-  <!-- React Root -->
   <div id="root"></div>
-
-  <!-- React and ReactDOM CDNs -->
   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-
-  <!-- React App Code -->
   <script type="text/babel">
-    // Mock Product Data
-    const products = [
-      {
-        id: 1,
-        title: "Quantum Blueprint",
-        description: "A stunning digital PDF blueprint of a futuristic city.",
-        price: 9.99,
-        image: "https://via.placeholder.com/300x200?text=Quantum+Blueprint",
-        category: "Designs",
-        stripeLink: "https://buy.stripe.com/28oeXG5xvgle4lW9AB",
-      },
-      {
-        id: 2,
-        title: "Neon Soundwave",
-        description: "High-quality digital audio loop for creators.",
-        price: 4.99,
-        image: "https://via.placeholder.com/300x200?text=Neon+Soundwave",
-        category: "Audio",
-        stripeLink: "https://buy.stripe.com/28oeXG5xvgle4lW9AB",
-      },
-      {
-        id: 3,
-        title: "Cosmic Template",
-        description: "Editable digital template for portfolios.",
-        price: 14.99,
-        image: "https://via.placeholder.com/300x200?text=Cosmic+Template",
-        category: "Templates",
-        stripeLink: "https://buy.stripe.com/28oeXG5xvgle4lW9AB",
-      },
-    ];
+    try {
+      const products = [
+        { id: 1, title: "Quantum Blueprint", description: "A stunning digital PDF blueprint of a futuristic city.", price: 9.99, image: "https://via.placeholder.com/300x200?text=Quantum+Blueprint", stripeLink: "https://buy.stripe.com/28oeXG5xvgle4lW9AB" },
+        { id: 2, title: "Neon Soundwave", description: "High-quality digital audio loop for creators.", price: 4.99, image: "https://via.placeholder.com/300x200?text=Neon+Soundwave", stripeLink: "https://buy.stripe.com/28oeXG5xvgle4lW9AB" },
+        { id: 3, title: "Cosmic Template", description: "Editable digital template for portfolios.", price: 14.99, image: "https://via.placeholder.com/300x200?text=Cosmic+Template", stripeLink: "https://buy.stripe.com/28oeXG5xvgle4lW9AB" },
+      ];
 
-    // Header Component
-    function Header() {
-      return (
-        <header className="py-6 px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl font-bold header-text neon-glow">
-            Glow Cart
-          </h1>
-          <p className="mt-2 text-lg sm:text-xl text-cyan-300">
-            Shop the Digital Universe
-          </p>
-        </header>
-      );
-    }
+      function Header() {
+        return <header className="py-6 px-4 sm:px-6 lg:px-8 text-center"><h1 className="text-4xl sm:text-5xl font-bold header-text neon-glow">Glow Cart</h1><p className="mt-2 text-lg sm:text-xl text-cyan-300">Shop the Digital Universe</p></header>;
+      }
 
-    // Product Card Component
-    function ProductCard({ product, addToCart }) {
-      return (
-        <div className="card-3d p-4 bg-gray-900 bg-opacity-80 rounded-lg neon-glow">
-          <img
-            src={product.image}
-            alt={product.title}
-            className="w-full h-48 object-cover rounded-md"
-          />
-          <h3 className="mt-4 text-xl font-semibold">{product.title}</h3>
-          <p className="mt-2 text-gray-300">{product.description}</p>
-          <p className="mt-2 text-cyan-400 font-bold">${product.price.toFixed(2)}</p>
-          <div className="mt-4 flex space-x-2">
-            <button
-              onClick={() => addToCart(product)}
-              className="flex-1 bg-cyan-500 text-black py-2 rounded-md hover:bg-cyan-400 neon-glow"
-            >
-              Add to Cart
-            </button>
-            <button
-              onClick={() => window.location.href = product.stripeLink}
-              className="flex-1 bg-purple-500 text-white py-2 rounded-md hover:bg-purple-400 neon-glow"
-            >
-              Buy Now
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    // Cart Component
-    function Cart({ cart, removeFromCart, proceedToCheckout }) {
-      const total = cart.reduce((sum, item) => sum + item.price, 0);
-
-      return (
-        <div className="fixed right-0 top-0 h-full w-80 bg-gray-900 bg-opacity-90 p-6 overflow-y-auto neon-glow">
-          <h2 className="text-2xl font-bold">Cart</h2>
-          {cart.length === 0 ? (
-            <p className="mt-4 text-gray-400">Your cart is empty.</p>
-          ) : (
-            <>
-              {cart.map((item) => (
-                <div key={item.id} className="mt-4 flex justify-between items-center">
-                  <div>
-                    <h3 className="text-lg">{item.title}</h3>
-                    <p className="text-cyan-400">${item.price.toFixed(2)}</p>
-                  </div>
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="text-red-500 hover:text-red-400"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              <p className="mt-6 text-xl font-bold">Total: ${total.toFixed(2)}</p>
-              <button
-                onClick={proceedToCheckout}
-                className="mt-4 w-full bg-cyan-500 text-black py-2 rounded-md hover:bg-cyan-400 neon-glow"
-              >
-                Checkout
-              </button>
-            </>
-          )}
-        </div>
-      );
-    }
-
-    // Main App Component
-    function App() {
-      const [cart, setCart] = React.useState([]);
-
-      const addToCart = (product) => {
-        setCart([...cart, product]);
-      };
-
-      const removeFromCart = (productId) => {
-        setCart(cart.filter((item) => item.id !== productId));
-      };
-
-      const proceedToCheckout = () => {
-        const stripeLink = cart[0]?.stripeLink || "https://buy.stripe.com/28oeXG5xvgle4lW9AB";
-        window.location.href = stripeLink;
-        // Note: For multi-item checkout, a backend is needed to create a dynamic Stripe session
-      };
-
-      return (
-        <div className="relative">
-          <Header />
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h2 className="text-3xl font-bold mb-8">Explore the Universe</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} addToCart={addToCart} />
-              ))}
+      function ProductCard({ product, addToCart }) {
+        return (
+          <div className="card-3d p-4 bg-gray-900 bg-opacity-80 rounded-lg neon-glow">
+            <img src={product.image} alt={product.title} className="w-full h-48 object-cover rounded-md" />
+            <h3 className="mt-4 text-xl font-semibold">{product.title}</h3>
+            <p className="mt-2 text-gray-300">{product.description}</p>
+            <p className="mt-2 text-cyan-400 font-bold">${product.price.toFixed(2)}</p>
+            <div className="mt-4 flex space-x-2">
+              <button onClick={() => addToCart(product)} className="flex-1 bg-cyan-500 text-black py-2 rounded-md hover:bg-cyan-400 neon-glow">Add to Cart</button>
+              <button onClick={() => window.location.href = product.stripeLink} className="flex-1 bg-purple-500 text-white py-2 rounded-md hover:bg-purple-400 neon-glow">Buy Now</button>
             </div>
-          </main>
-          <Cart cart={cart} removeFromCart={removeFromCart} proceedToCheckout={proceedToCheckout} />
-        </div>
-      );
-    }
+          </div>
+        );
+      }
 
-    // Render the App
-    ReactDOM.render(<App />, document.getElementById("root"));
+      function Cart({ cart, removeFromCart, proceedToCheckout }) {
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        return (
+          <div className="fixed right-0 top-0 h-full w-80 bg-gray-900 bg-opacity-90 p-6 overflow-y-auto neon-glow">
+            <h2 className="text-2xl font-bold">Cart</h2>
+            {cart.length === 0 ? <p className="mt-4 text-gray-400">Your cart is empty.</p> : <>
+              {cart.map((item) => <div key={item.id} className="mt-4 flex justify-between items-center"><div><h3 className="text-lg">{item.title}</h3><p className="text-cyan-400">${item.price.toFixed(2)}</p></div><button onClick={() => removeFromCart(item.id)} className="text-red-500 hover:text-red-400">Remove</button></div>)}
+              <p className="mt-6 text-xl font-bold">Total: ${total.toFixed(2)}</p>
+              <button onClick={proceedToCheckout} className="mt-4 w-full bg-cyan-500 text-black py-2 rounded-md hover:bg-cyan-400 neon-glow">Checkout</button>
+            </>}
+          </div>
+        );
+      }
+
+      function App() {
+        const [cart, setCart] = React.useState([]);
+        const addToCart = (product) => setCart([...cart, product]);
+        const removeFromCart = (productId) => setCart(cart.filter((item) => item.id !== productId));
+        const proceedToCheckout = () => {
+          const stripeLink = cart[0]?.stripeLink || "https://buy.stripe.com/28oeXG5xvgle4lW9AB";
+          window.location.href = stripeLink;
+        };
+        return (
+          <div className="relative">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+              <h2 className="text-3xl font-bold mb-8">Explore the Universe</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => <ProductCard key={product.id} product={product} addToCart={addToCart} />)}
+              </div>
+            </main>
+            <Cart cart={cart} removeFromCart={removeFromCart} proceedToCheckout={proceedToCheckout} />
+          </div>
+        );
+      }
+
+      ReactDOM.render(<App />, document.getElementId("root") || document.createElement("div"));
+    } catch (e) {
+      console.error("Error rendering app:", e);
+      document.getElementById("root").innerHTML = "<p class='text-center text-red-500'>Oops! Something went wrong. Check the console for details.</p>";
+    }
   </script>
 </body>
 </html>
