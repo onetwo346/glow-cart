@@ -3,33 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Glow Cart - Premium digital products marketplace with a futuristic cosmic design">
+  <meta name="theme-color" content="#0a0a23">
   <title>Glow Cart - Shop the Digital Universe</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://js.stripe.com/v3/"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    
+    :root {
+      --primary: #00f2fe;
+      --primary-dark: #00c2cc;
+      --secondary: #4facfe;
+      --accent: #f857a6;
+      --dark: #0a0a23;
+      --darker: #050518;
+      --light: #ffffff;
+      --gray: #9ca3af;
+      --card-bg: rgba(26, 26, 58, 0.7);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
-      background: linear-gradient(180deg, #0a0a23 0%, #1a1a3a 100%);
+      background: linear-gradient(180deg, var(--darker) 0%, #1a1a3a 100%);
       min-height: 100vh;
       overflow-x: hidden;
-      color: white;
+      color: var(--light);
       font-family: 'Inter', sans-serif;
     }
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-    .neon-glow {
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
+    
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
     }
-    .card-3d {
-      perspective: 1000px;
-      transition: transform 0.3s ease;
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(26, 26, 58, 0.2);
+      border-radius: 10px;
     }
-    .card-3d:hover {
-      transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(var(--primary), var(--secondary));
+      border-radius: 10px;
     }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(var(--primary-dark), var(--secondary));
+    }
+    
+    /* Grid Background */
     .grid-bg {
       position: fixed;
       top: 0;
       left: 0;
-      ширица: 100%;
+      width: 100%;
       height: 100%;
       background-image: linear-gradient(
           0deg,
@@ -54,49 +89,349 @@
       opacity: 0.3;
       animation: gridMove 20s linear infinite;
     }
+    
+    /* Space Scene Elements */
+    .space-scene {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    
+    .central-sphere {
+      position: fixed;
+      top: 50%;
+      left: 15%;
+      transform: translate(-50%, -50%);
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--primary), var(--secondary));
+      box-shadow: 0 0 60px 20px rgba(0, 242, 254, 0.5);
+      opacity: 0.7;
+      animation: pulse 8s ease-in-out infinite;
+      z-index: -1;
+    }
+    
+    .orbital-ring {
+      position: absolute;
+      top: 50%;
+      left: 15%;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 50%;
+      animation: rotate 20s linear infinite;
+    }
+    
+    /* Glassmorphism */
+    .glass {
+      background: rgba(26, 26, 58, 0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Neon Elements */
+    .neon-glow {
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
+    }
+    
+    .neon-text {
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.5), 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+    
+    .neon-border {
+      border: 1px solid rgba(0, 255, 255, 0.5);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+    
+    /* 3D Card Effect */
+    .card-3d {
+      perspective: 1000px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card-3d:hover {
+      transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 242, 254, 0.4);
+    }
+    
+    .card-3d .card-content {
+      transition: transform 0.3s ease;
+    }
+    
+    .card-3d:hover .card-content {
+      transform: translateZ(20px);
+    }
+    
+    /* Buttons */
+    .glow-button {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--darker);
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .glow-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.7);
+    }
+    
+    .glow-button:active {
+      transform: scale(0.98);
+    }
+    
+    .glow-button::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: rotate(45deg);
+      transition: all 0.3s ease;
+      opacity: 0;
+    }
+    
+    .glow-button:hover::after {
+      opacity: 1;
+      animation: shine 1.5s ease-out;
+    }
+    
+    /* Animations */
     @keyframes gridMove {
       0% { background-position: 0 0; }
       100% { background-position: 50px 50px; }
     }
+    
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); box-shadow: 0 0 30px rgba(0, 242, 254, 0.3); }
+      50% { text-shadow: 0 0 20px rgba(0, 255, 255, 1); box-shadow: 0 0 60px rgba(0, 242, 254, 0.6); }
+      100% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); box-shadow: 0 0 30px rgba(0, 242, 254, 0.3); }
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+    
+    @keyframes shine {
+      0% { left: -100%; opacity: 0; }
+      20% { opacity: 1; }
+      100% { left: 100%; opacity: 0; }
+    }
+    
+    @keyframes rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
     .header-text {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(45deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
       animation: pulse 2s infinite;
     }
-    @keyframes pulse {
-      0% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
-      50% { text-shadow: 0 0 20px rgba(0, 255, 255, 1); }
-      100% { text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
-    }
+    
     .download-btn {
       background: linear-gradient(45deg, #00f2fe, #4facfe);
       transition: all 0.3s ease;
     }
+    
     .download-btn:hover {
       transform: scale(1.05);
       box-shadow: 0 0 15px rgba(0, 242, 254, 0.7);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .central-sphere {
+        width: 100px;
+        height: 100px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="grid-bg"></div>
+  <div class="space-scene">
+    <div class="central-sphere"></div>
+    <div class="orbital-ring" style="width: 300px; height: 300px;"></div>
+    <div class="orbital-ring" style="width: 400px; height: 400px;"></div>
+    <div class="orbital-ring" style="width: 500px; height: 500px;"></div>
+  </div>
   <div id="root"></div>
 
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/framer-motion@10.12.16/dist/framer-motion.js"></script>
 
   <script type="text/babel">
     const { useState, useEffect } = React;
 
     const products = [
-      { id: 1, title: "Quantum Blueprint", price: 9.99, category: "Design", image: "https://via.placeholder.com/300x200", fileUrl: "https://example.com/quantum-blueprint.pdf" },
-      { id: 2, title: "Neon Soundwave", price: 4.99, category: "Audio", image: "https://via.placeholder.com/300x200", fileUrl: "https://example.com/neon-soundwave.mp3" },
-      { id: 3, title: "Cosmic Template", price: 14.99, category: "Template", image: "https://via.placeholder.com/300x200", fileUrl: "https://example.com/cosmic-template.zip" },
-      { id: 4, title: "Digital Art Pack", price: 19.99, category: "Art", image: "https://via.placeholder.com/300x200", fileUrl: "https://example.com/digital-art-pack.zip" }
+      { 
+        id: 1, 
+        title: "Quantum Blueprint", 
+        price: 9.99, 
+        category: "Design", 
+        rating: 4.7,
+        reviews: 28,
+        description: "Advanced design templates with futuristic elements and cosmic themes.",
+        image: "https://images.unsplash.com/photo-1545231027-637d2f6210f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
+        fileUrl: "https://example.com/quantum-blueprint.pdf",
+        featured: true,
+        tags: ["design", "template", "futuristic"]
+      },
+      { 
+        id: 2, 
+        title: "Neon Soundwave", 
+        price: 4.99, 
+        category: "Audio", 
+        rating: 4.3,
+        reviews: 15,
+        description: "Cyberpunk-inspired audio samples and synthesizer presets for modern productions.",
+        image: "https://images.unsplash.com/photo-1614149162883-504ce4d13909?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
+        fileUrl: "https://example.com/neon-soundwave.mp3",
+        featured: false,
+        tags: ["audio", "music", "cyberpunk"]
+      },
+      { 
+        id: 3, 
+        title: "Cosmic Template", 
+        price: 14.99, 
+        category: "Template", 
+        rating: 4.9,
+        reviews: 42,
+        description: "Professional website template with space-themed design and smooth animations.",
+        image: "https://images.unsplash.com/photo-1581822261290-991b38693d1b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
+        fileUrl: "https://example.com/cosmic-template.zip",
+        featured: true,
+        tags: ["web", "template", "space"]
+      },
+      { 
+        id: 4, 
+        title: "Digital Art Pack", 
+        price: 19.99, 
+        category: "Art", 
+        rating: 4.5,
+        reviews: 36,
+        description: "Collection of high-resolution digital artworks with cosmic and futuristic themes.",
+        image: "https://images.unsplash.com/photo-1634469875582-a0441d83d4b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
+        fileUrl: "https://example.com/digital-art-pack.zip",
+        featured: false,
+        tags: ["art", "digital", "collection"]
+      },
+      { 
+        id: 5, 
+        title: "Holographic UI Kit", 
+        price: 24.99, 
+        category: "UI/UX", 
+        rating: 4.8,
+        reviews: 52,
+        description: "Premium UI components with holographic effects for modern applications.",
+        image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
+        fileUrl: "https://example.com/holographic-ui.zip",
+        featured: true,
+        tags: ["ui", "design", "holographic"]
+      },
+      { 
+        id: 6, 
+        title: "Nebula 3D Models", 
+        price: 29.99, 
+        category: "3D", 
+        rating: 4.6,
+        reviews: 19,
+        description: "Collection of detailed 3D models of nebulae and space phenomena.",
+        image: "https://images.unsplash.com/photo-1539321908154-04927596764d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
+        fileUrl: "https://example.com/nebula-3d.zip",
+        featured: false,
+        tags: ["3d", "space", "models"]
+      }
     ];
+
+    // Navigation component
+    const Navigation = () => {
+      return (
+        <nav className="glass fixed top-0 left-0 right-0 z-50 px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold header-text">Glow<span className="text-cyan-400">Cart</span></h1>
+          </div>
+          <div className="hidden md:flex space-x-6">
+            <a href="#" className="text-white hover:text-cyan-400 transition duration-300">Home</a>
+            <a href="#products" className="text-white hover:text-cyan-400 transition duration-300">Products</a>
+            <a href="#cart" className="text-white hover:text-cyan-400 transition duration-300">Cart</a>
+            <a href="#purchases" className="text-white hover:text-cyan-400 transition duration-300">Purchases</a>
+          </div>
+          <div className="flex items-center space-x-4">
+            <button className="relative">
+              <i className="fas fa-shopping-cart text-white text-xl"></i>
+              <span className="absolute -top-2 -right-2 bg-cyan-500 text-xs text-black font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+            </button>
+            <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded-md hover:from-cyan-400 hover:to-blue-400 transition duration-300 neon-glow">
+              Sign In
+            </button>
+          </div>
+        </nav>
+      );
+    };
+
+    // Header/Hero component
+    const Hero = () => {
+      return (
+        <div className="relative min-h-screen flex items-center justify-center px-4 py-20 mt-16">
+          <div className="text-center z-10 max-w-4xl mx-auto">
+            <h1 className="text-5xl md:text-7xl font-bold header-text mb-6 animate-pulse">
+              Digital Universe Marketplace
+            </h1>
+            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+              Discover premium digital assets with futuristic design and cosmic themes for your next creative project.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="glow-button px-8 py-3 text-lg font-bold rounded-md">
+                Explore Products
+              </button>
+              <button className="bg-transparent border border-cyan-500 text-cyan-400 px-8 py-3 text-lg font-bold rounded-md hover:bg-cyan-500/10 transition duration-300">
+                Learn More
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    };
 
     function App() {
       const [cart, setCart] = useState([]);
       const [purchasedItems, setPurchasedItems] = useState([]);
+      const [activeCategory, setActiveCategory] = useState('All');
+      const [searchTerm, setSearchTerm] = useState('');
+      const [isCartOpen, setIsCartOpen] = useState(false);
 
       const stripe = Stripe('pk_test_YourPublicKey'); // Replace with your Stripe public key
 
@@ -134,84 +469,357 @@
         }
       }, []);
 
-      return (
-        <div className="p-6 max-w-7xl mx-auto">
-          <h1 className="text-center text-4xl font-bold header-text neon-glow mb-8">Glow Cart</h1>
-          <p className="text-center text-lg text-cyan-400 mb-10">Shop the Digital Universe</p>
-          
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map(product => (
-              <div key={product.id} className="card-3d bg-gray-900 bg-opacity-80 rounded-lg p-4 neon-glow">
-                <img src={product.image} alt={product.title} className="w-full h-48 object-cover rounded" />
-                <h2 className="mt-4 text-xl font-semibold">{product.title}</h2>
-                <p className="text-gray-400 text-sm">{product.category}</p>
-                <p className="text-cyan-400 text-2xl font-bold mt-2">${product.price.toFixed(2)}</p>
-                <div className="mt-4 flex gap-2">
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="flex-1 bg-cyan-500 text-black px-4 py-2 rounded hover:bg-cyan-400 neon-glow"
-                  >
-                    Add to Cart
-                  </button>
-                  <button
-                    onClick={() => initiateCheckout(product)}
-                    className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded hover:from-cyan-400 hover:to-blue-400 neon-glow"
-                  >
-                    Buy Now
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+      // Filter products based on active category and search term
+      const filteredProducts = products.filter(product => {
+        const matchesCategory = activeCategory === 'All' || product.category === activeCategory;
+        const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                             product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             product.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+        return matchesCategory && matchesSearch;
+      });
 
-          <div className="mt-10">
-            <h2 className="text-2xl font-bold neon-glow p-4 rounded">Cart Items ({cart.length})</h2>
-            {cart.length === 0 ? (
-              <p className="text-gray-400">Your cart is empty.</p>
-            ) : (
-              <div>
-                <ul className="mt-4 space-y-2">
-                  {cart.map((item, index) => (
-                    <li key={index} className="bg-gray-800 p-3 rounded flex justify-between items-center neon-glow">
-                      <span>{item.title} - ${item.price.toFixed(2)}</span>
-                      <button
-                        onClick={() => initiateCheckout(item)}
-                        className="bg-cyan-500 text-black px-3 py-1 rounded hover:bg-cyan-400"
-                      >
-                        Checkout
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+      // Get all unique categories
+      const categories = ['All', ...new Set(products.map(product => product.category))];
+
+      // Featured products
+      const featuredProducts = products.filter(product => product.featured);
+
+      // Star rating component
+      const StarRating = ({ rating }) => {
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+        
+        return (
+          <div className="flex items-center">
+            {[...Array(fullStars)].map((_, i) => (
+              <i key={`full-${i}`} className="fas fa-star text-yellow-400"></i>
+            ))}
+            {hasHalfStar && <i className="fas fa-star-half-alt text-yellow-400"></i>}
+            {[...Array(emptyStars)].map((_, i) => (
+              <i key={`empty-${i}`} className="far fa-star text-yellow-400"></i>
+            ))}
+            <span className="ml-1 text-gray-400 text-sm">({rating})</span>
+          </div>
+        );
+      };
+
+      // Product card component
+      const ProductCard = ({ product }) => {
+        return (
+          <div className="card-3d glass rounded-lg overflow-hidden transition-all duration-300 h-full flex flex-col">
+            <div className="relative overflow-hidden">
+              {product.featured && (
+                <div className="absolute top-0 right-0 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg z-10">
+                  Featured
+                </div>
+              )}
+              <img 
+                src={product.image} 
+                alt={product.title} 
+                className="w-full h-48 object-cover transition-transform duration-500 hover:scale-110" 
+              />
+            </div>
+            <div className="p-5 flex-grow flex flex-col card-content">
+              <div className="flex justify-between items-start mb-2">
+                <h2 className="text-xl font-semibold neon-text">{product.title}</h2>
+                <span className="bg-cyan-500/20 text-cyan-400 text-xs px-2 py-1 rounded">{product.category}</span>
+              </div>
+              <StarRating rating={product.rating} />
+              <p className="text-gray-400 text-sm mt-2 mb-4 flex-grow">{product.description}</p>
+              <div className="flex flex-wrap gap-1 mb-3">
+                {product.tags.map(tag => (
+                  <span key={tag} className="text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded-full">{tag}</span>
+                ))}
+              </div>
+              <p className="text-cyan-400 text-2xl font-bold mb-4">${product.price.toFixed(2)}</p>
+              <div className="flex gap-2">
                 <button
-                  onClick={() => initiateCheckout(cart)}
-                  className="mt-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-6 py-3 rounded hover:from-cyan-400 hover:to-blue-400 neon-glow"
+                  onClick={() => addToCart(product)}
+                  className="flex-1 bg-cyan-500 text-black px-4 py-2 rounded hover:bg-cyan-400 transition-all duration-300 flex items-center justify-center gap-2"
                 >
-                  Checkout All
+                  <i className="fas fa-shopping-cart"></i>
+                  <span>Add to Cart</span>
+                </button>
+                <button
+                  onClick={() => initiateCheckout(product)}
+                  className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded hover:from-cyan-400 hover:to-blue-400 transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  <i className="fas fa-bolt"></i>
+                  <span>Buy Now</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      return (
+        <div className="min-h-screen">
+          <Navigation />
+          <Hero />
+          
+          <div className="max-w-7xl mx-auto px-6 py-20" id="products">
+            {/* Featured Products Section */}
+            <div className="mb-20">
+              <h2 className="text-3xl font-bold header-text mb-8 flex items-center">
+                <i className="fas fa-star text-yellow-400 mr-3"></i>
+                Featured Products
+              </h2>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {featuredProducts.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </div>
+            
+            {/* All Products Section */}
+            <h2 className="text-3xl font-bold header-text mb-8">Browse All Products</h2>
+            
+            {/* Search and Filter */}
+            <div className="mb-8 flex flex-col md:flex-row gap-4 justify-between items-center">
+              <div className="relative w-full md:w-1/3">
+                <input 
+                  type="text" 
+                  placeholder="Search products..." 
+                  className="w-full bg-gray-900/50 border border-gray-700 rounded-lg py-2 px-4 pl-10 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-300"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              </div>
+              
+              <div className="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto">
+                {categories.map(category => (
+                  <button 
+                    key={category} 
+                    className={`px-4 py-2 rounded-full transition-all duration-300 whitespace-nowrap ${activeCategory === category ? 'bg-cyan-500 text-black font-bold' : 'bg-gray-800 text-white hover:bg-gray-700'}`}
+                    onClick={() => setActiveCategory(category)}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Products Grid */}
+            {filteredProducts.length > 0 ? (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredProducts.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <i className="fas fa-search text-5xl text-gray-600 mb-4"></i>
+                <p className="text-xl text-gray-400">No products found matching your criteria</p>
+                <button 
+                  className="mt-4 px-4 py-2 bg-cyan-500 text-black rounded hover:bg-cyan-400 transition-all duration-300"
+                  onClick={() => {
+                    setActiveCategory('All');
+                    setSearchTerm('');
+                  }}
+                >
+                  Reset Filters
                 </button>
               </div>
             )}
           </div>
 
+          {/* Cart Section */}
+          <div className="mt-20 glass rounded-xl p-6" id="cart">
+            <h2 className="text-3xl font-bold header-text mb-8 flex items-center">
+              <i className="fas fa-shopping-cart text-cyan-400 mr-3"></i>
+              Your Cart ({cart.length})
+            </h2>
+            
+            {cart.length === 0 ? (
+              <div className="text-center py-16 flex flex-col items-center">
+                <div className="w-20 h-20 rounded-full bg-gray-800 flex items-center justify-center mb-4">
+                  <i className="fas fa-shopping-cart text-3xl text-gray-500"></i>
+                </div>
+                <p className="text-xl text-gray-400 mb-4">Your cart is empty</p>
+                <p className="text-gray-500 mb-6 max-w-md">Looks like you haven't added any items to your cart yet. Browse our products and find something you'll love!</p>
+                <button 
+                  onClick={() => document.getElementById('products').scrollIntoView({ behavior: 'smooth' })}
+                  className="glow-button px-6 py-2 rounded-md"
+                >
+                  Browse Products
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-800">
+                        <th className="py-3 text-left">Product</th>
+                        <th className="py-3 text-center">Price</th>
+                        <th className="py-3 text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cart.map((item, index) => (
+                        <tr key={index} className="border-b border-gray-800 hover:bg-gray-800/50 transition-colors">
+                          <td className="py-4">
+                            <div className="flex items-center">
+                              <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded mr-4" />
+                              <div>
+                                <h3 className="font-semibold">{item.title}</h3>
+                                <p className="text-gray-400 text-sm">{item.category}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 text-center">
+                            <span className="text-cyan-400 font-bold">${item.price.toFixed(2)}</span>
+                          </td>
+                          <td className="py-4 text-center">
+                            <div className="flex justify-center gap-2">
+                              <button
+                                onClick={() => initiateCheckout(item)}
+                                className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-3 py-1 rounded hover:from-cyan-400 hover:to-blue-400 transition-all duration-300"
+                              >
+                                Checkout
+                              </button>
+                              <button
+                                onClick={() => {
+                                  const newCart = [...cart];
+                                  newCart.splice(index, 1);
+                                  setCart(newCart);
+                                }}
+                                className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-600 transition-all duration-300"
+                              >
+                                <i className="fas fa-trash-alt"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                
+                <div className="mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                  <div className="text-xl">
+                    <span className="text-gray-400">Total: </span>
+                    <span className="text-cyan-400 font-bold">
+                      ${cart.reduce((total, item) => total + item.price, 0).toFixed(2)}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => initiateCheckout(cart)}
+                    className="w-full md:w-auto bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-8 py-3 rounded-md hover:from-cyan-400 hover:to-blue-400 transition-all duration-300 flex items-center justify-center gap-2 font-bold"
+                  >
+                    <i className="fas fa-credit-card"></i>
+                    <span>Checkout All Items</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Purchases Section */}
           {purchasedItems.length > 0 && (
-            <div className="mt-10">
-              <h2 className="text-2xl font-bold neon-glow p-4 rounded">Your Purchases</h2>
-              <ul className="mt-4 space-y-2">
+            <div className="mt-20 glass rounded-xl p-6" id="purchases">
+              <h2 className="text-3xl font-bold header-text mb-8 flex items-center">
+                <i className="fas fa-download text-cyan-400 mr-3"></i>
+                Your Purchases
+              </h2>
+              <div className="grid sm:grid-cols-2 gap-6">
                 {purchasedItems.map((item, index) => (
-                  <li key={index} className="bg-gray-800 p-3 rounded flex justify-between items-center neon-glow">
-                    <span>{item.title}</span>
+                  <div key={index} className="glass rounded-lg p-4 flex justify-between items-center hover:bg-gray-800/50 transition-all duration-300">
+                    <div className="flex items-center">
+                      <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded mr-4" />
+                      <div>
+                        <h3 className="font-semibold">{item.title}</h3>
+                        <p className="text-gray-400 text-sm">Purchased on {new Date().toLocaleDateString()}</p>
+                      </div>
+                    </div>
                     <a
                       href={item.fileUrl}
                       download
-                      className="download-btn text-black px-3 py-1 rounded"
+                      className="download-btn text-black px-4 py-2 rounded flex items-center gap-2"
                     >
-                      Download
+                      <i className="fas fa-download"></i>
+                      <span>Download</span>
                     </a>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
+          
+          {/* Footer */}
+          <footer className="mt-32 glass rounded-t-xl p-10">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex flex-col md:flex-row justify-between items-center mb-10">
+                <h2 className="text-3xl font-bold header-text mb-6 md:mb-0">Glow<span className="text-cyan-400">Cart</span></h2>
+                <div className="flex gap-6">
+                  <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">
+                    <i className="fab fa-twitter text-xl"></i>
+                  </a>
+                  <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">
+                    <i className="fab fa-instagram text-xl"></i>
+                  </a>
+                  <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">
+                    <i className="fab fa-github text-xl"></i>
+                  </a>
+                  <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">
+                    <i className="fab fa-discord text-xl"></i>
+                  </a>
+                </div>
+              </div>
+              
+              <div className="grid md:grid-cols-4 gap-8 mb-10">
+                <div>
+                  <h3 className="text-lg font-bold mb-4">Shop</h3>
+                  <ul className="space-y-2">
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">All Products</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Featured</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">New Arrivals</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Pricing</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold mb-4">Company</h3>
+                  <ul className="space-y-2">
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">About Us</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Careers</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Press</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">News</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold mb-4">Support</h3>
+                  <ul className="space-y-2">
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Contact Us</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">FAQ</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Returns</a></li>
+                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Live Chat</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold mb-4">Stay Updated</h3>
+                  <p className="text-gray-400 mb-4">Subscribe to our newsletter for the latest updates and offers.</p>
+                  <div className="flex">
+                    <input type="email" placeholder="Your email" className="bg-gray-800 text-white px-4 py-2 rounded-l focus:outline-none focus:ring-2 focus:ring-cyan-500 w-full" />
+                    <button className="bg-cyan-500 text-black px-4 py-2 rounded-r hover:bg-cyan-400 transition-colors duration-300">
+                      <i className="fas fa-paper-plane"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="pt-8 border-t border-gray-800 text-center text-gray-500">
+                <p>© {new Date().getFullYear()} GlowCart. All rights reserved.</p>
+                <div className="flex justify-center gap-6 mt-4">
+                  <a href="#" className="text-gray-500 hover:text-gray-400 transition-colors duration-300">Privacy Policy</a>
+                  <a href="#" className="text-gray-500 hover:text-gray-400 transition-colors duration-300">Terms of Service</a>
+                  <a href="#" className="text-gray-500 hover:text-gray-400 transition-colors duration-300">Cookie Policy</a>
+                </div>
+              </div>
+            </div>
+          </footer>
         </div>
       );
     }
