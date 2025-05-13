@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Cosmic Background */
+body {
+  background: linear-gradient(180deg, #0a0a23 0%, #1a1a3a 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Neon Glow Effect */
+.neon-glow {
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+.neon-glow:hover {
+  box-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 40px rgba(0, 255, 255, 0.6);
+}
+
+/* 3D Card Tilt */
+.card-3d {
+  perspective: 1000px;
+  transition: transform 0.3s ease;
+}
+
+.card-3d:hover {
+  transform: rotateY(10deg) rotateX(10deg) scale(1.05);
+}
+
+/* Glowing Grid Background */
+.grid-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+      0deg,
+      transparent 24%,
+      rgba(0, 255, 255, 0.1) 25%,
+      rgba(0, 255, 255, 0.1) 26%,
+      transparent 27%,
+      transparent 74%,
+      rgba(0, 255, 255, 0.1) 75%,
+      rgba(0, 255, 255, 0.1) 76%,
+      transparent 77%,
+      transparent
+    ),
+    linear-gradient(
+      90deg,
+      transparent 24%,
+      rgba(0, 255, 255, 0.1) 25%,
+      rgba(0, 255, 255, 0.1) 26%,
+      transparent 27%,
+      transparent 74%,
+      rgba(0, 255, 255, 0.1) 75%,
+      rgba(0, 255, 255, 0.1) 76%,
+      transparent 77%,
+      transparent
+    );
+  background-size: 50px 50px;
+  z-index: -1;
+  opacity: 0.3;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+/* Cosmic Header Animation */
+.header-text {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(0, 255, 255, 1);
+  }
+  100% {
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+  }
+}
