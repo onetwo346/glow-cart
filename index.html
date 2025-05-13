@@ -12,6 +12,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
     
     :root {
       --primary: #00f2fe;
@@ -268,11 +269,470 @@
       box-shadow: 0 0 15px rgba(0, 242, 254, 0.7);
     }
     
+    /* Chatbot Styles */
+    .chatbot-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      width: 350px;
+      max-height: 500px;
+      transition: all 0.3s ease;
+      cursor: move;
+    }
+    
+    /* Dragging styles */
+    .chatbot-container.dragging {
+      opacity: 0.8;
+      transform: scale(1.02);
+      transition: all 0.1s ease;
+    }
+    
+    @keyframes pulsate {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(0, 242, 254, 0.5), 0 0 20px rgba(0, 242, 254, 0.3);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(0, 242, 254, 0.8), 0 0 30px rgba(0, 242, 254, 0.5);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(0, 242, 254, 0.5), 0 0 20px rgba(0, 242, 254, 0.3);
+      }
+    }
+    
+    .chatbot-button {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--darker);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.7), 0 0 30px rgba(0, 242, 254, 0.4);
+      transition: all 0.3s ease;
+      z-index: 1001;
+      animation: pulsate 2s infinite ease-in-out;
+      overflow: visible;
+      position: relative;
+    }
+    
+    /* Cute robot face in button */
+    .chatbot-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    
+    .chatbot-eyes {
+      display: flex;
+      justify-content: space-around;
+      width: 60%;
+      margin-bottom: 5px;
+    }
+    
+    .chatbot-eye {
+      width: 10px;
+      height: 10px;
+      background-color: var(--darker);
+      border-radius: 50%;
+      position: relative;
+      animation: blink 4s infinite;
+    }
+    
+    @keyframes blink {
+      0%, 96%, 98% { transform: scaleY(1); }
+      97% { transform: scaleY(0.1); }
+    }
+    
+    .chatbot-mouth {
+      width: 20px;
+      height: 6px;
+      background-color: var(--darker);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-button:hover .chatbot-mouth {
+      height: 10px;
+      border-radius: 5px 5px 10px 10px;
+    }
+    
+    .chatbot-button-text {
+      position: absolute;
+      top: -30px;
+      background: rgba(0, 242, 254, 0.2);
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      white-space: nowrap;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+      opacity: 0.9;
+      animation: fadeInUp 0.5s ease, pulsate 2s infinite ease-in-out;
+    }
+    
+    .chatbot-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.9), 0 0 40px rgba(0, 242, 254, 0.6);
+      animation-play-state: paused;
+    }
+    
+    @keyframes popBubble {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+      }
+      75% {
+        transform: scale(0.98);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .chatbot-window {
+      position: absolute;
+      bottom: 80px;
+      right: 0;
+      width: 350px;
+      height: 450px;
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transform-origin: bottom right;
+      transform: scale(0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 242, 254, 0.5);
+    }
+    
+    .chatbot-window.active {
+      animation: popBubble 0.5s forwards ease-out;
+    }
+    
+    /* Chat bubble pointer */
+    .chatbot-window:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      right: 25px;
+      width: 20px;
+      height: 20px;
+      background: rgba(26, 26, 58, 0.9);
+      transform: rotate(45deg);
+      border-radius: 3px;
+    }
+    
+    .chatbot-header {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--darker);
+      padding: 15px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: move;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .chatbot-header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+      animation: rainbow-border 3s linear infinite;
+    }
+    
+    @keyframes rainbow-border {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 200% 0%; }
+    }
+    
+    .chatbot-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .chatbot-emoji-btn {
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+    
+    .chatbot-emoji-btn:hover {
+      transform: scale(1.2);
+    }
+    
+    .emoji-pop {
+      animation: emoji-pop 0.3s ease;
+    }
+    
+    @keyframes emoji-pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+      100% { transform: scale(1); }
+    }
+    
+    .chatbot-close {
+      cursor: pointer;
+      font-size: 20px;
+      transition: transform 0.3s ease;
+    }
+    
+    .chatbot-close:hover {
+      transform: rotate(90deg);
+    }
+    
+    .chatbot-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: rgba(10, 10, 35, 0.95);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .chatbot-message {
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 15px;
+      margin-bottom: 5px;
+      animation: fadeInUp 0.3s ease;
+      word-break: break-word;
+    }
+    
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 15px;
+      height: 35px;
+    }
+    
+    .typing-indicator span {
+      height: 8px;
+      width: 8px;
+      margin: 0 2px;
+      background-color: rgba(0, 242, 254, 0.7);
+      display: block;
+      border-radius: 50%;
+      opacity: 0.4;
+    }
+    
+    .typing-indicator span:nth-of-type(1) {
+      animation: typing 1s infinite 0.1s;
+    }
+    
+    .typing-indicator span:nth-of-type(2) {
+      animation: typing 1s infinite 0.2s;
+    }
+    
+    .typing-indicator span:nth-of-type(3) {
+      animation: typing 1s infinite 0.3s;
+    }
+    
+    @keyframes typing {
+      0% {
+        transform: translateY(0px);
+        opacity: 0.4;
+      }
+      50% {
+        transform: translateY(-7px);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(0px);
+        opacity: 0.4;
+      }
+    }
+    
+    .chatbot-message.bot {
+      align-self: flex-start;
+      background: rgba(26, 26, 58, 0.7);
+      border-bottom-left-radius: 5px;
+      color: white;
+      position: relative;
+    }
+    
+    .chatbot-message.bot::before {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 25px;
+      height: 25px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300f2fe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4-8c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4 4 1.79 4 4zm-2 0c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z"/></svg>');
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.7;
+    }
+    
+    .chatbot-message.user {
+      align-self: flex-end;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--darker);
+      border-bottom-right-radius: 5px;
+    }
+    
+    .chatbot-input-container {
+      display: flex;
+      padding: 10px;
+      background: rgba(26, 26, 58, 0.9);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .chatbot-input {
+      flex: 1;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-input:focus {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+    }
+    
+    .chatbot-send {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--darker);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-left: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-send:hover {
+      transform: scale(1.1);
+    }
+    
+    .chatbot-product {
+      background: rgba(26, 26, 58, 0.5);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 12px;
+      border-left: 3px solid var(--primary);
+      animation: fadeInUp 0.4s ease;
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-product:hover {
+      background: rgba(26, 26, 58, 0.7);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .chatbot-product-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 5px;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+    
+    .chatbot-product-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: var(--primary);
+    }
+    
+    .chatbot-download-link {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 12px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: var(--darker);
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .chatbot-download-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+    }
+    
+    @keyframes pulse-download {
+      0% {
+        box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(0, 242, 254, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 242, 254, 0);
+      }
+    }
+    
+    .chatbot-download-link:active {
+      transform: translateY(1px);
+      animation: pulse-download 0.5s;
+    }
+    
     /* Responsive Design */
     @media (max-width: 768px) {
       .central-sphere {
         width: 100px;
         height: 100px;
+      }
+      
+      .chatbot-container {
+        width: 300px;
+      }
+      
+      .chatbot-window {
+        width: 300px;
+        height: 400px;
       }
     }
   </style>
@@ -286,6 +746,38 @@
     <div class="orbital-ring" style="width: 500px; height: 500px;"></div>
   </div>
   <div id="root"></div>
+  
+  <!-- Chatbot Component (Non-React) -->
+  <div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-button" id="chatbotButton">
+      <div class="chatbot-button-text">Tap me! Tap me!</div>
+      <div class="chatbot-face">
+        <div class="chatbot-eyes">
+          <div class="chatbot-eye"></div>
+          <div class="chatbot-eye"></div>
+        </div>
+        <div class="chatbot-mouth"></div>
+      </div>
+    </div>
+    <div class="chatbot-window" id="chatbotWindow">
+      <div class="chatbot-header" id="chatbotHeader">
+        <div>✨ GlowCart Assistant</div>
+        <div class="chatbot-controls">
+          <button class="chatbot-emoji-btn" id="chatbotEmoji" title="Send emoji">😊</button>
+          <div class="chatbot-close" id="chatbotClose">&times;</div>
+        </div>
+      </div>
+      <div class="chatbot-messages" id="chatbotMessages">
+        <div class="chatbot-message bot">Hello! I'm your GlowCart assistant. If you've made a purchase, I can help you access your downloads. Just let me know!</div>
+      </div>
+      <div class="chatbot-input-container">
+        <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Type your message..." />
+        <button class="chatbot-send" id="chatbotSend">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -294,6 +786,280 @@
 
   <script type="text/babel">
     const { useState, useEffect } = React;
+    
+    // Initialize chatbot functionality (outside of React)
+    document.addEventListener('DOMContentLoaded', () => {
+      // Add draggable functionality
+      const makeDraggable = (element) => {
+        const container = document.getElementById('chatbotContainer');
+        const header = document.getElementById('chatbotHeader');
+        
+        let isDragging = false;
+        let offsetX, offsetY;
+        
+        const startDrag = (e) => {
+          // Only allow dragging from the header or if the element itself is the container
+          if (e.target !== header && !header.contains(e.target) && e.target !== container) return;
+          
+          isDragging = true;
+          container.classList.add('dragging');
+          
+          // Calculate the offset from the pointer to the container's top-left corner
+          const rect = container.getBoundingClientRect();
+          offsetX = e.clientX - rect.left;
+          offsetY = e.clientY - rect.top;
+          
+          // Prevent text selection during drag
+          document.body.style.userSelect = 'none';
+        };
+        
+        const drag = (e) => {
+          if (!isDragging) return;
+          
+          // Calculate new position
+          const x = e.clientX - offsetX;
+          const y = e.clientY - offsetY;
+          
+          // Apply new position
+          container.style.left = `${x}px`;
+          container.style.top = `${y}px`;
+          container.style.right = 'auto';
+          container.style.bottom = 'auto';
+        };
+        
+        const endDrag = () => {
+          if (!isDragging) return;
+          
+          isDragging = false;
+          container.classList.remove('dragging');
+          document.body.style.userSelect = '';
+          
+          // Save position to localStorage
+          const rect = container.getBoundingClientRect();
+          localStorage.setItem('chatbotPosition', JSON.stringify({
+            left: rect.left,
+            top: rect.top
+          }));
+        };
+        
+        // Restore position from localStorage if available
+        const savedPosition = localStorage.getItem('chatbotPosition');
+        if (savedPosition) {
+          try {
+            const { left, top } = JSON.parse(savedPosition);
+            container.style.left = `${left}px`;
+            container.style.top = `${top}px`;
+            container.style.right = 'auto';
+            container.style.bottom = 'auto';
+          } catch (e) {
+            console.error('Error restoring chatbot position:', e);
+          }
+        }
+        
+        // Add event listeners
+        header.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', endDrag);
+        
+        // Touch events for mobile
+        header.addEventListener('touchstart', (e) => {
+          const touch = e.touches[0];
+          startDrag({ clientX: touch.clientX, clientY: touch.clientY, target: header });
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+          if (!isDragging) return;
+          const touch = e.touches[0];
+          drag({ clientX: touch.clientX, clientY: touch.clientY });
+        });
+        
+        document.addEventListener('touchend', endDrag);
+      };
+      
+      // Add emoji picker functionality
+      const setupEmojiPicker = () => {
+        const emojiButton = document.getElementById('chatbotEmoji');
+        const emojis = ['😊', '👍', '❤️', '🎉', '🔥', '✨', '🌟', '💯', '🙏', '🤖'];
+        let currentEmojiIndex = 0;
+        
+        emojiButton.addEventListener('click', () => {
+          // Cycle through emojis
+          currentEmojiIndex = (currentEmojiIndex + 1) % emojis.length;
+          emojiButton.textContent = emojis[currentEmojiIndex];
+          
+          // Add emoji to input
+          const input = document.getElementById('chatbotInput');
+          input.value += emojis[currentEmojiIndex];
+          input.focus();
+          
+          // Animate button
+          emojiButton.classList.add('emoji-pop');
+          setTimeout(() => emojiButton.classList.remove('emoji-pop'), 300);
+        });
+      };
+      // Clear URL parameters after processing to prevent duplicate purchases on refresh
+      const pageUrlParams = new URLSearchParams(window.location.search);
+      const hasSessionId = pageUrlParams.has('session_id');
+      const hasDownload = pageUrlParams.has('download');
+      
+      if (hasSessionId && hasDownload) {
+        // Store the session ID for later use but clean the URL
+        const pageSessionId = pageUrlParams.get('session_id');
+        setTimeout(() => {
+          // Replace the URL without the query parameters to prevent duplicates on refresh
+          const cleanUrl = window.location.pathname;
+          window.history.replaceState({}, document.title, cleanUrl);
+        }, 2000); // Short delay to ensure all processes have time to read the parameters
+      }
+      const chatbotButton = document.getElementById('chatbotButton');
+      const chatbotWindow = document.getElementById('chatbotWindow');
+      const chatbotClose = document.getElementById('chatbotClose');
+      const chatbotMessages = document.getElementById('chatbotMessages');
+      const chatbotInput = document.getElementById('chatbotInput');
+      const chatbotSend = document.getElementById('chatbotSend');
+      
+      // Initialize draggable functionality
+      makeDraggable(document.getElementById('chatbotContainer'));
+      
+      // Initialize emoji picker
+      setupEmojiPicker();
+      
+      let sessionId = null;
+      
+      // Get session ID from URL if available
+      sessionId = pageUrlParams.get('session_id');
+      
+      // Auto-open chatbot if coming from a successful purchase
+      if (sessionId && pageUrlParams.get('download') === 'true') {
+        setTimeout(() => {
+          chatbotWindow.classList.add('active');
+          sendBotMessage("I see you've just completed a purchase! Let me fetch your downloads for you...");
+          
+          // Automatically fetch purchase info
+          setTimeout(() => {
+            sendChatbotMessage('show my downloads');
+          }, 1000);
+        }, 1500);
+      }
+      
+      // First-time explanation of chatbot purpose
+      let hasExplainedPurpose = localStorage.getItem('chatbotPurposeExplained');
+      let firstOpen = true;
+      
+      // Toggle chatbot window
+      chatbotButton.addEventListener('click', () => {
+        chatbotWindow.classList.toggle('active');
+        
+        // Show purpose explanation on first open
+        if (firstOpen && !hasExplainedPurpose) {
+          setTimeout(() => {
+            sendBotMessage("Welcome to GlowCart Assistant! I'm here to help you with your purchases and provide easy access to your downloads. If you've made a purchase, I can show you all your PDF downloads. Just ask me to 'show my downloads' or 'help me find my files'.");
+            localStorage.setItem('chatbotPurposeExplained', 'true');
+            firstOpen = false;
+          }, 500);
+        }
+      });
+      
+      // Close chatbot window
+      chatbotClose.addEventListener('click', () => {
+        chatbotWindow.classList.remove('active');
+      });
+      
+      // Send message on Enter key
+      chatbotInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          sendUserMessage();
+        }
+      });
+      
+      // Send message on button click
+      chatbotSend.addEventListener('click', sendUserMessage);
+      
+      function sendUserMessage() {
+        const message = chatbotInput.value.trim();
+        if (message) {
+          // Add user message to chat
+          const userMessageElement = document.createElement('div');
+          userMessageElement.classList.add('chatbot-message', 'user');
+          userMessageElement.textContent = message;
+          chatbotMessages.appendChild(userMessageElement);
+          
+          // Clear input
+          chatbotInput.value = '';
+          
+          // Scroll to bottom
+          chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+          
+          // Process message
+          sendChatbotMessage(message);
+        }
+      }
+      
+      function sendBotMessage(text, html = null) {
+        // Check for duplicate messages to prevent duplicates
+        const existingMessages = Array.from(chatbotMessages.querySelectorAll('.chatbot-message.bot'));
+        const lastMessage = existingMessages[existingMessages.length - 1];
+        
+        // If this is a duplicate of the last message, don't add it
+        if (lastMessage && lastMessage.textContent === text) {
+          return;
+        }
+        
+        const botMessageElement = document.createElement('div');
+        botMessageElement.classList.add('chatbot-message', 'bot');
+        
+        if (html) {
+          botMessageElement.innerHTML = text + html;
+        } else {
+          botMessageElement.textContent = text;
+        }
+        
+        chatbotMessages.appendChild(botMessageElement);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+      }
+      
+      function sendChatbotMessage(message) {
+        // If no session ID, inform user
+        if (!sessionId) {
+          sendBotMessage("I don't see any active session. If you've made a purchase, please refresh the page or check your email for download links.");
+          return;
+        }
+        
+        // Show typing indicator
+        const typingIndicator = document.createElement('div');
+        typingIndicator.classList.add('chatbot-message', 'bot', 'typing-indicator');
+        typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+        chatbotMessages.appendChild(typingIndicator);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        
+        // Send message to server
+        fetch('/api/chatbot/message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ sessionId, message }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Remove typing indicator
+          chatbotMessages.removeChild(typingIndicator);
+          
+          if (data.error) {
+            sendBotMessage("Sorry, I encountered an error: " + data.error);
+          } else {
+            sendBotMessage(data.message, data.html);
+          }
+        })
+        .catch(error => {
+          // Remove typing indicator
+          chatbotMessages.removeChild(typingIndicator);
+          
+          console.error('Error:', error);
+          sendBotMessage("Sorry, I encountered an error while processing your request.");
+        });
+      }
+    });
 
     const products = [
       { 
@@ -434,35 +1200,57 @@
       const [isCartOpen, setIsCartOpen] = useState(false);
 
       const stripe = Stripe('pk_test_YourPublicKey'); // Replace with your Stripe public key
+      const [showChatbot, setShowChatbot] = useState(false);
 
-      const initiateCheckout = async (product) => {
-        try {
-          const response = await fetch('/api/create-checkout-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ product })
-          });
-          const { sessionId } = await response.json();
-          stripe.redirectToCheckout({ sessionId });
-        } catch (error) {
-          console.error('Error initiating checkout:', error);
-        }
+      const initiateCheckout = () => {
+        window.location.href = 'https://buy.stripe.com/28oeXG5xvgle4lW9AB';
       };
 
       const addToCart = (product) => {
         setCart([...cart, product]);
       };
 
-      // Simulate checking for purchased items (e.g., after redirect from Stripe)
+      // Check for purchased items (after redirect from Stripe)
       useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const sessionId = urlParams.get('session_id');
-        if (sessionId) {
+        const download = urlParams.get('download');
+        
+        // Prevent duplicate purchases by checking localStorage
+        const processedSessions = JSON.parse(localStorage.getItem('processedSessions') || '[]');
+        
+        if (sessionId && !processedSessions.includes(sessionId)) {
           fetch(`/api/verify-purchase/${sessionId}`)
             .then(res => res.json())
             .then(data => {
               if (data.purchased) {
-                setPurchasedItems([...purchasedItems, data.product]);
+                if (data.isCartPurchase) {
+                  // Multiple products purchased
+                  setPurchasedItems(prevItems => {
+                    // Filter out any duplicates by ID
+                    const existingIds = prevItems.map(item => item.id);
+                    const newItems = data.products.filter(product => !existingIds.includes(product.id));
+                    return [...prevItems, ...newItems];
+                  });
+                } else {
+                  // Single product purchase
+                  setPurchasedItems(prevItems => {
+                    // Check if this product is already in the list
+                    if (!prevItems.some(item => item.id === data.product.id)) {
+                      return [...prevItems, data.product];
+                    }
+                    return prevItems;
+                  });
+                }
+                
+                // Mark this session as processed
+                processedSessions.push(sessionId);
+                localStorage.setItem('processedSessions', JSON.stringify(processedSessions));
+                
+                // If this is a redirect after successful payment, show the chatbot
+                if (download === 'true') {
+                  setShowChatbot(true);
+                }
               }
             })
             .catch(err => console.error('Error verifying purchase:', err));
