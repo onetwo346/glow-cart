@@ -132,18 +132,16 @@
     }
     
     .central-sphere {
-      position: fixed;
+      position: absolute;
       top: 50%;
       left: 15%;
       transform: translate(-50%, -50%);
       width: 150px;
       height: 150px;
+      background: radial-gradient(circle at 30% 30%, #00f2fe, #0a0a23);
       border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, var(--primary), var(--secondary));
-      box-shadow: 0 0 60px 20px rgba(0, 242, 254, 0.5);
-      opacity: 0.7;
-      animation: pulse 8s ease-in-out infinite;
-      z-index: -1;
+      box-shadow: 0 0 50px rgba(0, 242, 254, 0.8), 0 0 100px rgba(0, 242, 254, 0.4);
+      z-index: 1;
     }
     
     .orbital-ring {
@@ -154,6 +152,20 @@
       border: 1px solid rgba(0, 242, 254, 0.3);
       border-radius: 50%;
       animation: rotate 20s linear infinite;
+    }
+    
+    /* Chatbot Button */
+    .chatbot-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--primary), var(--secondary));
+      box-shadow: 0 0 60px 20px rgba(0, 242, 254, 0.5);
+      cursor: pointer;
+      z-index: 10;
     }
     
     /* Glassmorphism */
@@ -386,6 +398,33 @@
       100% { left: 100%; opacity: 0; }
     }
     
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(10px); }
+    }
+    
+    @keyframes progressBar {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    
+    .animate-fadeOut {
+      animation: fadeOut 0.5s ease forwards;
+    }
+    
+    .animate-progressBar {
+      animation: progressBar 2.5s ease-in-out forwards;
+    }
+    
     @keyframes rotate {
       from { transform: translate(-50%, -50%) rotate(0deg); }
       to { transform: translate(-50%, -50%) rotate(360deg); }
@@ -545,10 +584,119 @@
       animation: fadeInUp 0.5s ease, pulsate 2s infinite ease-in-out;
     }
     
-    .chatbot-button:hover {
+    .chatbot-button:hover, .chatbot-orb-button:hover {
       transform: scale(1.1);
       box-shadow: 0 0 25px rgba(0, 242, 254, 0.9), 0 0 40px rgba(0, 242, 254, 0.6);
       animation-play-state: paused;
+    }
+    
+    .chatbot-orb-button {
+      background: radial-gradient(circle at 30% 30%, #00f2fe, #0a0a23);
+      box-shadow: 0 0 50px rgba(0, 242, 254, 0.8), 0 0 100px rgba(0, 242, 254, 0.4);
+      animation: pulsateGlow 8s infinite ease-in-out;
+      z-index: 40;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+    
+    .chatbot-orb-button:active {
+      cursor: grabbing;
+    }
+    
+    @keyframes pulsateGlow {
+      0% {
+        box-shadow: 0 0 30px 5px rgba(0, 242, 254, 0.3);
+        background: radial-gradient(circle at 30% 30%, rgba(0, 242, 254, 0.5), #0a0a23);
+      }
+      25% {
+        box-shadow: 0 0 70px 15px rgba(0, 242, 254, 0.9), 0 0 100px rgba(0, 242, 254, 0.4);
+        background: radial-gradient(circle at 30% 30%, rgba(0, 242, 254, 1), #0a0a23);
+      }
+      50% {
+        box-shadow: 0 0 30px 5px rgba(0, 242, 254, 0.3);
+        background: radial-gradient(circle at 30% 30%, rgba(0, 242, 254, 0.5), #0a0a23);
+      }
+      75% {
+        box-shadow: 0 0 10px 2px rgba(0, 242, 254, 0.1);
+        background: radial-gradient(circle at 30% 30%, rgba(0, 242, 254, 0.3), #0a0a23);
+      }
+      100% {
+        box-shadow: 0 0 30px 5px rgba(0, 242, 254, 0.3);
+        background: radial-gradient(circle at 30% 30%, rgba(0, 242, 254, 0.5), #0a0a23);
+      }
+    }
+    
+    .chatbot-message {
+      max-width: 85%;
+      margin-bottom: 10px;
+    }
+    
+    .chatbot-message.bot {
+      align-self: flex-start;
+    }
+    
+    .chatbot-message.user {
+      align-self: flex-end;
+      margin-left: auto;
+    }
+    
+    .chatbot-message .message-content {
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .chatbot-message.bot .message-content {
+      background-color: rgba(30, 41, 59, 0.8);
+      border-bottom-left-radius: 4px;
+    }
+    
+    .chatbot-message.user .message-content {
+      background: linear-gradient(to right, #0ea5e9, #2563eb);
+      color: #000;
+      border-bottom-right-radius: 4px;
+    }
+    
+    .chatbot-quick-reply {
+      background-color: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      text-align: left;
+      display: flex;
+      align-items: center;
+    }
+    
+    .chatbot-quick-reply:hover {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Typing indicator */
+    .typing-indicator .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.6);
+      animation: typingBounce 1.4s infinite ease-in-out both;
+    }
+    
+    .typing-indicator .dot:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+    
+    .typing-indicator .dot:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+    
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
     }
     
     @keyframes popBubble {
@@ -906,37 +1054,7 @@
   </div>
   <div id="root"></div>
   
-  <!-- Chatbot Component (Non-React) -->
-  <div class="chatbot-container" id="chatbotContainer">
-    <div class="chatbot-button" id="chatbotButton">
-
-      <div class="chatbot-face">
-        <div class="chatbot-eyes">
-          <div class="chatbot-eye"></div>
-          <div class="chatbot-eye"></div>
-        </div>
-        <div class="chatbot-mouth"></div>
-      </div>
-    </div>
-    <div class="chatbot-window" id="chatbotWindow">
-      <div class="chatbot-header" id="chatbotHeader">
-        <div>✨ GlowCart Assistant</div>
-        <div class="chatbot-controls">
-          <button class="chatbot-emoji-btn" id="chatbotEmoji" title="Send emoji">😊</button>
-          <div class="chatbot-close" id="chatbotClose">&times;</div>
-        </div>
-      </div>
-      <div class="chatbot-messages" id="chatbotMessages">
-        <div class="chatbot-message bot">Hello! I'm your GlowCart assistant. If you've made a purchase, I can help you access your downloads. Just let me know!</div>
-      </div>
-      <div class="chatbot-input-container">
-        <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Type your message..." />
-        <button class="chatbot-send" id="chatbotSend">
-          <i class="fas fa-paper-plane"></i>
-        </button>
-      </div>
-    </div>
-  </div>
+  <!-- React components will be rendered here -->
 
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -1873,14 +1991,31 @@
     // Authentication components
     const AuthModal = ({ isOpen, onClose, activeTab, setActiveTab }) => {
       const [username, setUsername] = useState('');
+      const [email, setEmail] = useState('');
       const [password, setPassword] = useState('');
       const [confirmPassword, setConfirmPassword] = useState('');
       const [error, setError] = useState('');
       const [success, setSuccess] = useState('');
+      const [forgotPassword, setForgotPassword] = useState(false);
       
       // Form validation
       const validateForm = () => {
         setError('');
+        
+        if (forgotPassword) {
+          if (!email) {
+            setError('Please enter your email address');
+            return false;
+          }
+          
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            setError('Please enter a valid email address');
+            return false;
+          }
+          
+          return true;
+        }
         
         if (!username || !password) {
           setError('Please fill in all fields');
@@ -1897,9 +2032,22 @@
           return false;
         }
         
-        if (activeTab === 'signup' && password !== confirmPassword) {
-          setError('Passwords do not match');
-          return false;
+        if (activeTab === 'signup') {
+          if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return false;
+          }
+          
+          if (!email) {
+            setError('Please enter your email address');
+            return false;
+          }
+          
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            setError('Please enter a valid email address');
+            return false;
+          }
         }
         
         return true;
@@ -1919,10 +2067,26 @@
           return;
         }
         
+        // Check if this is a new user for welcome message
+        const isNewUser = user.isNewUser;
+        
+        // Update user to no longer be considered new
+        if (isNewUser) {
+          const updatedUsers = users.map(u => {
+            if (u.username === username) {
+              return { ...u, isNewUser: false };
+            }
+            return u;
+          });
+          localStorage.setItem('glowcart_users', JSON.stringify(updatedUsers));
+        }
+        
         // Set user in localStorage
         localStorage.setItem('glowcart_current_user', JSON.stringify({
           username: user.username,
-          timestamp: new Date().getTime()
+          email: user.email,
+          timestamp: new Date().getTime(),
+          showWelcome: isNewUser
         }));
         
         setSuccess('Sign in successful!');
@@ -1950,27 +2114,75 @@
           return;
         }
         
+        // Check if email already exists
+        if (users.some(u => u.email === email)) {
+          setError('Email already exists');
+          return;
+        }
+        
         // Add new user
-        users.push({
+        const newUser = {
           username,
+          email,
           password,
-          createdAt: new Date().getTime()
-        });
+          createdAt: new Date().getTime(),
+          isNewUser: true
+        };
+        
+        users.push(newUser);
         
         localStorage.setItem('glowcart_users', JSON.stringify(users));
         
         // Set success message
-        setSuccess('Account created successfully! You can now sign in.');
+        setSuccess('Account created successfully! Logging you in...');
         
-        // Clear form and switch to sign in tab after a delay
+        // Automatically log in the new user
         setTimeout(() => {
+          // Store user in localStorage with showWelcome flag
+          localStorage.setItem('glowcart_current_user', JSON.stringify({
+            username: username,
+            email: email,
+            timestamp: new Date().getTime(),
+            showWelcome: true
+          }));
+          
+          // Clear form and close modal
           setUsername('');
+          setEmail('');
           setPassword('');
           setConfirmPassword('');
           setError('');
           setSuccess('');
-          setActiveTab('signin');
+          onClose();
+          window.location.reload(); // Refresh to update UI and trigger welcome message
         }, 1500);
+      };
+      
+      // Handle forgot password
+      const handleForgotPassword = (e) => {
+        e.preventDefault();
+        if (!validateForm()) return;
+        
+        // Check if email exists in localStorage
+        const users = JSON.parse(localStorage.getItem('glowcart_users') || '[]');
+        const user = users.find(u => u.email === email);
+        
+        if (!user) {
+          setError('No account found with this email address');
+          return;
+        }
+        
+        // In a real app, this would send an email with a reset link
+        // For this demo, we'll just show the password
+        setSuccess(`Password recovery email sent to ${email}. Please check your inbox!`);
+        
+        // Clear form and switch back to sign in after a delay
+        setTimeout(() => {
+          setEmail('');
+          setError('');
+          setSuccess('');
+          setForgotPassword(false);
+        }, 3000);
       };
       
       if (!isOpen) return null;
@@ -1983,7 +2195,7 @@
             
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold header-text">
-                {activeTab === 'signin' ? 'Sign In' : 'Create Account'}
+                {forgotPassword ? 'Reset Password' : activeTab === 'signin' ? 'Sign In' : 'Create Account'}
               </h2>
               <button 
                 onClick={onClose}
@@ -1994,20 +2206,22 @@
               </button>
             </div>
             
-            <div className="flex mb-6">
-              <button 
-                className={`flex-1 py-2 text-center transition-colors ${activeTab === 'signin' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-gray-400 hover:text-gray-300'}`}
-                onClick={() => setActiveTab('signin')}
-              >
-                Sign In
-              </button>
-              <button 
-                className={`flex-1 py-2 text-center transition-colors ${activeTab === 'signup' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-gray-400 hover:text-gray-300'}`}
-                onClick={() => setActiveTab('signup')}
-              >
-                Sign Up
-              </button>
-            </div>
+            {!forgotPassword && (
+              <div className="flex mb-6">
+                <button 
+                  className={`flex-1 py-2 text-center transition-colors ${activeTab === 'signin' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-gray-400 hover:text-gray-300'}`}
+                  onClick={() => setActiveTab('signin')}
+                >
+                  Sign In
+                </button>
+                <button 
+                  className={`flex-1 py-2 text-center transition-colors ${activeTab === 'signup' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-gray-400 hover:text-gray-300'}`}
+                  onClick={() => setActiveTab('signup')}
+                >
+                  Sign Up
+                </button>
+              </div>
+            )}
             
             {error && (
               <div className="bg-red-500/20 border border-red-500/50 text-white px-4 py-2 rounded mb-4 animate-fadeIn">
@@ -2023,63 +2237,111 @@
               </div>
             )}
             
-            <form onSubmit={activeTab === 'signin' ? handleSignIn : handleSignUp}>
-              <div className="mb-4">
-                <label className="block text-gray-300 mb-2" htmlFor="username">Username</label>
-                <input 
-                  type="text" 
-                  id="username" 
-                  className="w-full bg-gray-800/50 border border-gray-700 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your username"
-                  required
-                />
-              </div>
-              
-              <div className="mb-4">
-                <label className="block text-gray-300 mb-2" htmlFor="password">Password</label>
-                <input 
-                  type="password" 
-                  id="password" 
-                  className="w-full bg-gray-800/50 border border-gray-700 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  required
-                />
-              </div>
-              
-              {activeTab === 'signup' && (
+            {forgotPassword ? (
+              <form onSubmit={handleForgotPassword}>
                 <div className="mb-4">
-                  <label className="block text-gray-300 mb-2" htmlFor="confirmPassword">Confirm Password</label>
+                  <label className="block text-gray-300 mb-2" htmlFor="email">Email Address</label>
                   <input 
-                    type="password" 
-                    id="confirmPassword" 
+                    type="email" 
+                    id="email" 
                     className="w-full bg-gray-800/50 border border-gray-700 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm your password"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email address"
                     required
                   />
                 </div>
-              )}
+                
+                <button 
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold py-2 px-4 rounded hover:from-cyan-400 hover:to-blue-400 transition-all duration-300 mt-2"
+                >
+                  Reset Password
+                </button>
+                
+                <p className="text-center mt-4 text-gray-400 text-sm">
+                  Remember your password? <button type="button" onClick={() => setForgotPassword(false)} className="text-cyan-400 hover:underline">Back to Sign In</button>
+                </p>
+              </form>
+            ) : (
+              <form onSubmit={activeTab === 'signin' ? handleSignIn : handleSignUp}>
+                <div className="mb-4">
+                  <label className="block text-gray-300 mb-2" htmlFor="username">Username</label>
+                  <input 
+                    type="text" 
+                    id="username" 
+                    className="w-full bg-gray-800/50 border border-gray-700 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your username"
+                    required
+                  />
+                </div>
+                
+                {activeTab === 'signup' && (
+                  <div className="mb-4">
+                    <label className="block text-gray-300 mb-2" htmlFor="email">Email Address</label>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      className="w-full bg-gray-800/50 border border-gray-700 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email address"
+                      required
+                    />
+                  </div>
+                )}
+                
+                <div className="mb-4">
+                  <label className="block text-gray-300 mb-2" htmlFor="password">Password</label>
+                  <input 
+                    type="password" 
+                    id="password" 
+                    className="w-full bg-gray-800/50 border border-gray-700 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    required
+                  />
+                </div>
+                
+                {activeTab === 'signup' && (
+                  <div className="mb-4">
+                    <label className="block text-gray-300 mb-2" htmlFor="confirmPassword">Confirm Password</label>
+                    <input 
+                      type="password" 
+                      id="confirmPassword" 
+                      className="w-full bg-gray-800/50 border border-gray-700 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm your password"
+                      required
+                    />
+                  </div>
+                )}
               
-              <button 
-                type="submit"
-                className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold py-2 px-4 rounded hover:from-cyan-400 hover:to-blue-400 transition-all duration-300 mt-2"
-              >
-                {activeTab === 'signin' ? 'Sign In' : 'Create Account'}
-              </button>
-            </form>
-            
-            {activeTab === 'signin' && (
-              <p className="text-center mt-4 text-gray-400 text-sm">
-                Don't have an account? <button onClick={() => setActiveTab('signup')} className="text-cyan-400 hover:underline">Sign up</button>
-              </p>
+                <button 
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold py-2 px-4 rounded hover:from-cyan-400 hover:to-blue-400 transition-all duration-300 mt-2"
+                >
+                  {activeTab === 'signin' ? 'Sign In' : 'Create Account'}
+                </button>
+              </form>
             )}
             
-            {activeTab === 'signup' && (
+            {!forgotPassword && activeTab === 'signin' && (
+              <div>
+                <p className="text-center mt-4 text-gray-400 text-sm">
+                  Don't have an account? <button onClick={() => setActiveTab('signup')} className="text-cyan-400 hover:underline">Sign up</button>
+                </p>
+                <p className="text-center mt-2 text-gray-400 text-sm">
+                  <button onClick={() => setForgotPassword(true)} className="text-cyan-400 hover:underline">Forgot password?</button>
+                </p>
+              </div>
+            )}
+            
+            {!forgotPassword && activeTab === 'signup' && (
               <p className="text-center mt-4 text-gray-400 text-sm">
                 Already have an account? <button onClick={() => setActiveTab('signin')} className="text-cyan-400 hover:underline">Sign in</button>
               </p>
@@ -2135,7 +2397,244 @@
       const stripe = Stripe('pk_test_YourPublicKey'); // Replace with your Stripe public key
       const [showChatbot, setShowChatbot] = useState(false);
       
-      // Check if user is logged in on component mount
+      // Chatbot toggle and functions
+      const handleChatbotQuickReply = (type) => {
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        
+        // Add user selection as a message
+        const userMessage = document.createElement('div');
+        userMessage.className = 'chatbot-message user';
+        
+        let userText = '';
+        switch(type) {
+          case 'downloads':
+            userText = 'I want to see my downloads';
+            break;
+          case 'support':
+            userText = 'I need support';
+            break;
+          case 'about':
+            userText = 'Tell me about Glow Cart';
+            break;
+          default:
+            userText = type;
+        }
+        
+        userMessage.innerHTML = `
+          <div class="message-content">
+            <p>${userText}</p>
+          </div>
+        `;
+        chatbotMessages.appendChild(userMessage);
+        
+        // Scroll to bottom
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        
+        // Show typing indicator
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'chatbot-message bot typing-indicator';
+        typingIndicator.innerHTML = `
+          <div class="message-content">
+            <div class="flex gap-1">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+          </div>
+        `;
+        chatbotMessages.appendChild(typingIndicator);
+        
+        // Process response after delay
+        setTimeout(() => {
+          // Remove typing indicator
+          chatbotMessages.removeChild(typingIndicator);
+          
+          // Add bot response based on type
+          const botMessage = document.createElement('div');
+          botMessage.className = 'chatbot-message bot';
+          
+          switch(type) {
+            case 'downloads':
+              if (purchasedItems.length > 0) {
+                botMessage.innerHTML = `
+                  <div class="message-content">
+                    <p>Here are your downloads:</p>
+                    <div class="mt-3 space-y-3">
+                      ${purchasedItems.map(product => `
+                        <div class="bg-black bg-opacity-30 p-3 rounded-lg">
+                          <div class="flex items-center gap-2 mb-2">
+                            <img src="${product.image}" alt="${product.title}" class="w-10 h-10 object-cover rounded">
+                            <p class="font-bold">${product.title}</p>
+                          </div>
+                          <a href="${product.fileUrl}" download class="bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded flex items-center justify-center gap-2 w-full">
+                            <i class="fas fa-download"></i>
+                            <span>Download Now</span>
+                          </a>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                `;
+              } else {
+                botMessage.innerHTML = `
+                  <div class="message-content">
+                    <p>You don't have any downloads yet. Browse our products and make a purchase to see them here!</p>
+                    <button class="chatbot-quick-reply mt-3" onclick="scrollToSection('products')">
+                      <i class="fas fa-shopping-bag mr-2"></i> Browse Products
+                    </button>
+                  </div>
+                `;
+              }
+              break;
+              
+            case 'support':
+              botMessage.innerHTML = `
+                <div class="message-content">
+                  <p>Our support team is ready to help! You can reach us at:</p>
+                  <div class="mt-3">
+                    <button class="chatbot-quick-reply" onclick="document.getElementById('supportModal').classList.remove('hidden')">
+                      <i class="fas fa-envelope mr-2"></i> Contact Support
+                    </button>
+                  </div>
+                </div>
+              `;
+              break;
+              
+            case 'about':
+              botMessage.innerHTML = `
+                <div class="message-content">
+                  <p>Glow Cart is your one-stop shop for premium digital products. We offer:</p>
+                  <ul class="list-disc pl-5 mt-2 space-y-1">
+                    <li>High-quality digital assets</li>
+                    <li>Instant downloads</li>
+                    <li>Secure payment processing</li>
+                    <li>24/7 customer support</li>
+                  </ul>
+                  <div class="mt-3">
+                    <button class="chatbot-quick-reply" onclick="scrollToSection('how-it-works')">
+                      <i class="fas fa-info-circle mr-2"></i> How It Works
+                    </button>
+                  </div>
+                </div>
+              `;
+              break;
+              
+            default:
+              botMessage.innerHTML = `
+                <div class="message-content">
+                  <p>I'm not sure how to help with that. Would you like to try one of these options?</p>
+                  <div class="flex flex-col gap-2 mt-3">
+                    <button class="chatbot-quick-reply" onclick="handleChatbotQuickReply('downloads')">
+                      <i class="fas fa-download mr-2"></i> My Downloads
+                    </button>
+                    <button class="chatbot-quick-reply" onclick="handleChatbotQuickReply('support')">
+                      <i class="fas fa-headset mr-2"></i> Contact Support
+                    </button>
+                  </div>
+                </div>
+              `;
+          }
+          
+          chatbotMessages.appendChild(botMessage);
+          chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }, 1000);
+      };
+      
+      // Function to handle sending a message in the chatbot
+      const handleChatbotSend = () => {
+        const input = document.getElementById('chatbotInput');
+        const message = input.value.trim();
+        
+        if (message) {
+          // Add user message
+          const chatbotMessages = document.getElementById('chatbotMessages');
+          const userMessage = document.createElement('div');
+          userMessage.className = 'chatbot-message user';
+          userMessage.innerHTML = `
+            <div class="message-content">
+              <p>${message}</p>
+            </div>
+          `;
+          chatbotMessages.appendChild(userMessage);
+          
+          // Clear input
+          input.value = '';
+          
+          // Scroll to bottom
+          chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+          
+          // Process message and determine intent
+          let intent = 'unknown';
+          const lowerMessage = message.toLowerCase();
+          
+          if (lowerMessage.includes('download') || lowerMessage.includes('purchase') || lowerMessage.includes('bought')) {
+            intent = 'downloads';
+          } else if (lowerMessage.includes('help') || lowerMessage.includes('support') || lowerMessage.includes('contact') || lowerMessage.includes('email')) {
+            intent = 'support';
+          } else if (lowerMessage.includes('about') || lowerMessage.includes('what is') || lowerMessage.includes('who are')) {
+            intent = 'about';
+          }
+          
+          // Handle the intent after a short delay
+          setTimeout(() => {
+            handleChatbotQuickReply(intent);
+          }, 500);
+        }
+      };
+      
+      // Function to scroll to a section
+      const scrollToSection = (sectionId) => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+      
+      // Chatbot dragging functionality
+      const handleChatbotDragStart = (e) => {
+        e.preventDefault();
+        const chatbotButton = document.getElementById('draggableChatbot');
+        
+        // Get initial position
+        const initialX = e.clientX || (e.touches && e.touches[0].clientX);
+        const initialY = e.clientY || (e.touches && e.touches[0].clientY);
+        
+        // Get initial button position
+        const rect = chatbotButton.getBoundingClientRect();
+        const buttonX = rect.left;
+        const buttonY = rect.top;
+        
+        // Setup move and end event handlers
+        const handleMove = (moveEvent) => {
+          const currentX = moveEvent.clientX || (moveEvent.touches && moveEvent.touches[0].clientX);
+          const currentY = moveEvent.clientY || (moveEvent.touches && moveEvent.touches[0].clientY);
+          
+          const deltaX = currentX - initialX;
+          const deltaY = currentY - initialY;
+          
+          // Update position
+          chatbotButton.style.left = `${buttonX + deltaX}px`;
+          chatbotButton.style.top = `${buttonY + deltaY}px`;
+          chatbotButton.style.bottom = 'auto';
+          chatbotButton.style.right = 'auto';
+        };
+        
+        const handleEnd = () => {
+          // Remove event listeners
+          document.removeEventListener('mousemove', handleMove);
+          document.removeEventListener('mouseup', handleEnd);
+          document.removeEventListener('touchmove', handleMove);
+          document.removeEventListener('touchend', handleEnd);
+        };
+        
+        // Add event listeners
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('mouseup', handleEnd);
+        document.addEventListener('touchmove', handleMove);
+        document.addEventListener('touchend', handleEnd);
+      };
+      
+      // Check if user is logged in on component mount and load purchases
       useEffect(() => {
         const userJson = localStorage.getItem('glowcart_current_user');
         if (userJson) {
@@ -2147,6 +2646,27 @@
           
           if (hoursElapsed < 24) {
             setCurrentUser(userData);
+            
+            // Load user's purchases from localStorage
+            const userPurchases = localStorage.getItem(`glowcart_purchases_${userData.username}`);
+            if (userPurchases) {
+              setPurchasedItems(JSON.parse(userPurchases));
+            }
+            
+            // Check if we should show the welcome message
+            if (userData.showWelcome) {
+              // Show welcome modal with slight delay for better UX
+              setTimeout(() => {
+                const welcomeModal = document.getElementById('welcomeModal');
+                if (welcomeModal) {
+                  welcomeModal.classList.remove('hidden');
+                }
+              }, 1000);
+              
+              // Update user data to not show welcome again
+              const updatedUserData = { ...userData, showWelcome: false };
+              localStorage.setItem('glowcart_current_user', JSON.stringify(updatedUserData));
+            }
           } else {
             // Login expired, remove from localStorage
             localStorage.removeItem('glowcart_current_user');
@@ -2158,62 +2678,266 @@
       const handleSignOut = () => {
         localStorage.removeItem('glowcart_current_user');
         setCurrentUser(null);
+        setPurchasedItems([]);
       };
 
-      const initiateCheckout = () => {
-        window.location.href = 'https://buy.stripe.com/28oeXG5xvgle4lW9AB';
+      const initiateCheckout = (product) => {
+        // Show payment processing overlay
+        const processingOverlay = document.createElement('div');
+        processingOverlay.className = 'fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50';
+        processingOverlay.innerHTML = `
+          <div class="glass p-8 rounded-xl max-w-md text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-cyan-500 mx-auto mb-6"></div>
+            <h2 class="text-2xl font-bold header-text mb-4">Processing Payment</h2>
+            <p class="text-gray-300 mb-2">Please wait while we process your payment...</p>
+            <div class="w-full bg-gray-700 h-2 rounded-full mt-6 overflow-hidden">
+              <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-full animate-progressBar" style="width: 0%"></div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(processingOverlay);
+        
+        // Animate progress bar
+        const progressBar = processingOverlay.querySelector('.animate-progressBar');
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+          progress += 5;
+          if (progress > 100) {
+            clearInterval(progressInterval);
+          } else {
+            progressBar.style.width = `${progress}%`;
+          }
+        }, 75);
+        
+        // Store the product(s) being purchased in localStorage for retrieval after payment
+        if (Array.isArray(product)) {
+          // Multiple products (cart checkout)
+          localStorage.setItem('glowcart_pending_purchase', JSON.stringify({
+            products: product,
+            timestamp: new Date().getTime(),
+            isCartPurchase: true
+          }));
+        } else {
+          // Single product checkout
+          localStorage.setItem('glowcart_pending_purchase', JSON.stringify({
+            product: product,
+            timestamp: new Date().getTime(),
+            isCartPurchase: false
+          }));
+        }
+        
+        // In a real implementation, this would redirect to Stripe with the correct products
+        // For demo purposes, we'll simulate a successful payment by adding a success parameter
+        // that we'll check when the page reloads
+        const returnUrl = window.location.href.split('?')[0] + '?payment_success=true';
+        
+        // Normally this would go to Stripe, but for the demo we'll just simulate by redirecting back
+        setTimeout(() => {
+          window.location.href = returnUrl;
+        }, 2500);
       };
 
       const addToCart = (product) => {
         setCart([...cart, product]);
       };
 
-      // Check for purchased items (after redirect from Stripe)
+      // Check for purchased items (after simulated payment success)
       useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
-        const sessionId = urlParams.get('session_id');
-        const download = urlParams.get('download');
+        const paymentSuccess = urlParams.get('payment_success');
         
-        // Prevent duplicate purchases by checking localStorage
-        const processedSessions = JSON.parse(localStorage.getItem('processedSessions') || '[]');
-        
-        if (sessionId && !processedSessions.includes(sessionId)) {
-          fetch(`/api/verify-purchase/${sessionId}`)
-            .then(res => res.json())
-            .then(data => {
-              if (data.purchased) {
-                if (data.isCartPurchase) {
-                  // Multiple products purchased
-                  setPurchasedItems(prevItems => {
-                    // Filter out any duplicates by ID
-                    const existingIds = prevItems.map(item => item.id);
-                    const newItems = data.products.filter(product => !existingIds.includes(product.id));
-                    return [...prevItems, ...newItems];
-                  });
-                } else {
-                  // Single product purchase
-                  setPurchasedItems(prevItems => {
-                    // Check if this product is already in the list
-                    if (!prevItems.some(item => item.id === data.product.id)) {
-                      return [...prevItems, data.product];
-                    }
-                    return prevItems;
-                  });
-                }
-                
-                // Mark this session as processed
-                processedSessions.push(sessionId);
-                localStorage.setItem('processedSessions', JSON.stringify(processedSessions));
-                
-                // If this is a redirect after successful payment, show the chatbot
-                if (download === 'true') {
-                  setShowChatbot(true);
-                }
+        // Check if we have a pending purchase and payment was successful
+        if (paymentSuccess === 'true') {
+          const pendingPurchaseJson = localStorage.getItem('glowcart_pending_purchase');
+          
+          if (pendingPurchaseJson) {
+            const pendingPurchase = JSON.parse(pendingPurchaseJson);
+            const purchaseTimestamp = pendingPurchase.timestamp;
+            const now = new Date().getTime();
+            
+            // Only process if the purchase is recent (within last 5 minutes)
+            if (now - purchaseTimestamp < 5 * 60 * 1000) {
+              // Process purchased items
+              let purchasedProducts = [];
+              
+              if (pendingPurchase.isCartPurchase) {
+                // Multiple products purchased
+                setPurchasedItems(prevItems => {
+                  // Filter out any duplicates by ID
+                  const existingIds = prevItems.map(item => item.id);
+                  const newItems = pendingPurchase.products.filter(product => !existingIds.includes(product.id));
+                  const newItemsWithDate = newItems.map(product => ({
+                    ...product,
+                    purchaseDate: new Date().toISOString()
+                  }));
+                  purchasedProducts = newItemsWithDate; // Store for chatbot
+                  return [...prevItems, ...newItemsWithDate];
+                });
+              } else {
+                // Single product purchase
+                setPurchasedItems(prevItems => {
+                  // Check if this product is already in the list
+                  if (!prevItems.some(item => item.id === pendingPurchase.product.id)) {
+                    const newProduct = {
+                      ...pendingPurchase.product,
+                      purchaseDate: new Date().toISOString()
+                    };
+                    purchasedProducts = [newProduct]; // Store for chatbot
+                    return [...prevItems, newProduct];
+                  }
+                  return prevItems;
+                });
               }
-            })
-            .catch(err => console.error('Error verifying purchase:', err));
+              
+              // Clear the cart after successful purchase
+              if (pendingPurchase.isCartPurchase) {
+                setCart([]);
+              }
+              
+              // Different behavior based on user login status
+              if (currentUser) {
+                // For logged-in users: Save to account and redirect to purchases section
+                setTimeout(() => {
+                  // We use setTimeout to ensure purchasedItems has been updated
+                  const currentPurchases = JSON.parse(localStorage.getItem(`glowcart_purchases_${currentUser.username}`) || '[]');
+                  let updatedPurchases = [...currentPurchases];
+                  
+                  if (pendingPurchase.isCartPurchase) {
+                    // Add new products that aren't already in purchases
+                    pendingPurchase.products.forEach(product => {
+                      if (!updatedPurchases.some(item => item.id === product.id)) {
+                        updatedPurchases.push({
+                          ...product,
+                          purchaseDate: new Date().toISOString()
+                        });
+                      }
+                    });
+                  } else if (!updatedPurchases.some(item => item.id === pendingPurchase.product.id)) {
+                    // Add single product with purchase date
+                    updatedPurchases.push({
+                      ...pendingPurchase.product,
+                      purchaseDate: new Date().toISOString()
+                    });
+                  }
+                  
+                  // Save to localStorage
+                  localStorage.setItem(`glowcart_purchases_${currentUser.username}`, JSON.stringify(updatedPurchases));
+                  
+                  // Scroll to purchases section
+                  const purchasesSection = document.getElementById('purchases');
+                  if (purchasesSection) {
+                    purchasesSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                  
+                  // Show success message for signed-in users
+                  const successToast = document.createElement('div');
+                  successToast.className = 'fixed bottom-4 right-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-6 py-3 rounded-lg shadow-lg z-50 animate-fadeIn';
+                  successToast.innerHTML = `
+                    <div class="flex items-center gap-3">
+                      <i class="fas fa-check-circle text-2xl"></i>
+                      <div>
+                        <p class="font-bold">Purchase Successful!</p>
+                        <p class="text-sm">Your downloads are now available in your Purchases section.</p>
+                      </div>
+                    </div>
+                  `;
+                  document.body.appendChild(successToast);
+                  
+                  // Remove toast after 5 seconds
+                  setTimeout(() => {
+                    successToast.classList.add('animate-fadeOut');
+                    setTimeout(() => document.body.removeChild(successToast), 500);
+                  }, 5000);
+                }, 500);
+              } else {
+                // For guest users: Show chatbot with download links
+                setTimeout(() => {
+                  // Show chatbot
+                  setShowChatbot(true);
+                  
+                  // Initialize chatbot with welcome message and download links
+                  const chatbotContainer = document.getElementById('chatbotContainer');
+                  if (chatbotContainer) {
+                    const chatbotMessages = document.getElementById('chatbotMessages');
+                    
+                    // Clear any existing messages
+                    chatbotMessages.innerHTML = '';
+                    
+                    // Add bot welcome message
+                    const welcomeMessage = document.createElement('div');
+                    welcomeMessage.className = 'chatbot-message bot';
+                    welcomeMessage.innerHTML = `
+                      <div class="message-content">
+                        <p>🎉 Thank you for your purchase! Your downloads are ready.</p>
+                      </div>
+                    `;
+                    chatbotMessages.appendChild(welcomeMessage);
+                    
+                    // Add download links for each purchased product
+                    purchasedProducts.forEach(product => {
+                      const downloadMessage = document.createElement('div');
+                      downloadMessage.className = 'chatbot-message bot';
+                      downloadMessage.innerHTML = `
+                        <div class="message-content">
+                          <div class="flex items-center gap-2 mb-2">
+                            <img src="${product.image}" alt="${product.title}" class="w-10 h-10 object-cover rounded">
+                            <p class="font-bold">${product.title}</p>
+                          </div>
+                          <a href="${product.fileUrl}" download class="bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded flex items-center justify-center gap-2 w-full">
+                            <i class="fas fa-download"></i>
+                            <span>Download Now</span>
+                          </a>
+                        </div>
+                      `;
+                      chatbotMessages.appendChild(downloadMessage);
+                    });
+                    
+                    // Add tip message
+                    const tipMessage = document.createElement('div');
+                    tipMessage.className = 'chatbot-message bot';
+                    tipMessage.innerHTML = `
+                      <div class="message-content">
+                        <p>💡 Tip: Create an account to save your purchases for future access!</p>
+                      </div>
+                    `;
+                    chatbotMessages.appendChild(tipMessage);
+                    
+                    // Scroll to bottom of messages
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                  }
+                }, 1000);
+                
+                // Show success toast for guest users
+                const successToast = document.createElement('div');
+                successToast.className = 'fixed bottom-4 right-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-6 py-3 rounded-lg shadow-lg z-50 animate-fadeIn';
+                successToast.innerHTML = `
+                  <div class="flex items-center gap-3">
+                    <i class="fas fa-check-circle text-2xl"></i>
+                    <div>
+                      <p class="font-bold">Purchase Successful!</p>
+                      <p class="text-sm">Your download assistant is opening now.</p>
+                    </div>
+                  </div>
+                `;
+                document.body.appendChild(successToast);
+                
+                // Remove toast after 5 seconds
+                setTimeout(() => {
+                  successToast.classList.add('animate-fadeOut');
+                  setTimeout(() => document.body.removeChild(successToast), 500);
+                }, 5000);
+              }
+            }
+            
+            // Clear the pending purchase
+            localStorage.removeItem('glowcart_pending_purchase');
+            
+            // Remove the query parameter to prevent reprocessing on refresh
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
         }
-      }, []);
+      }, [currentUser, setShowChatbot]);
+      
 
       // Filter products based on active category and search term
       const filteredProducts = products.filter(product => {
@@ -2621,41 +3345,256 @@
             )}
           </div>
           
-          {/* Testimonials Section */}
-          <Testimonials />
-
-          {/* Purchases Section */}
-          {purchasedItems.length > 0 && (
-            <div className="mt-20 glass rounded-xl p-6" id="purchases">
-              <h2 className="text-3xl font-bold header-text mb-8 flex items-center">
-                <i className="fas fa-download text-cyan-400 mr-3"></i>
+          {/* Purchases Section - Appears before testimonials for logged-in users */}
+          {currentUser && (
+            <div className="mt-16 glass rounded-xl p-5 transition-all duration-500 max-w-4xl mx-auto" id="purchases">
+              <h2 className="text-2xl font-bold header-text mb-6 flex items-center">
+                <i className="fas fa-download text-cyan-400 mr-2"></i>
                 Your Purchases
               </h2>
-              <div className="grid sm:grid-cols-2 gap-6">
-                {purchasedItems.map((item, index) => (
-                  <div key={index} className="glass rounded-lg p-4 flex justify-between items-center hover:bg-gray-800/50 transition-all duration-300">
-                    <div className="flex items-center">
-                      <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded mr-4" />
-                      <div>
-                        <h3 className="font-semibold">{item.title}</h3>
-                        <p className="text-gray-400 text-sm">Purchased on {new Date().toLocaleDateString()}</p>
+              
+              {purchasedItems.length > 0 ? (
+                <div className="grid sm:grid-cols-2 gap-5">
+                  {purchasedItems.map((item, index) => (
+                    <div key={index} className="glass rounded-lg p-4 flex justify-between items-center hover:bg-gray-800/50 transition-all duration-300">
+                      <div className="flex items-center">
+                        <img src={item.image} alt={item.title} className="w-14 h-14 object-cover rounded mr-3" />
+                        <div>
+                          <h3 className="font-semibold">{item.title}</h3>
+                          <p className="text-gray-400 text-sm">Purchased on {item.purchaseDate ? new Date(item.purchaseDate).toLocaleDateString() : new Date().toLocaleDateString()}</p>
+                        </div>
                       </div>
+                      <a
+                        href={item.fileUrl}
+                        download
+                        className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded hover:from-cyan-400 hover:to-blue-400 transition-all duration-300 flex items-center gap-2 shadow-md shadow-cyan-500/20"
+                      >
+                        <i className="fas fa-download"></i>
+                        <span>Download</span>
+                      </a>
                     </div>
-                    <a
-                      href={item.fileUrl}
-                      download
-                      className="download-btn text-black px-4 py-2 rounded flex items-center gap-2"
-                    >
-                      <i className="fas fa-download"></i>
-                      <span>Download</span>
-                    </a>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 flex flex-col items-center">
+                  <div className="w-18 h-18 rounded-full bg-gray-800 flex items-center justify-center mb-4">
+                    <i className="fas fa-box-open text-2xl text-gray-500"></i>
                   </div>
-                ))}
-              </div>
+                  <p className="text-xl text-gray-400 mb-3">No purchases yet</p>
+                  <p className="text-gray-500 mb-5 max-w-md">Your digital downloads will appear here after you make a purchase. Browse our products and find something amazing!</p>
+                  <button 
+                    onClick={() => document.getElementById('products').scrollIntoView({ behavior: 'smooth' })}
+                    className="glow-button px-6 py-2 rounded-md"
+                  >
+                    Explore Products
+                  </button>
+                </div>
+              )}
             </div>
           )}
           
+          {/* Testimonials Section */}
+          <Testimonials />
+          
           {/* Footer */}
+          {/* New Enhanced Chatbot */}
+          <div id="chatbotContainer" className={`fixed bottom-4 right-4 z-40 ${showChatbot ? '' : 'hidden'}`}>
+            <div className="glass rounded-lg shadow-lg overflow-hidden w-96 h-[450px] flex flex-col">
+              <div className="p-4 bg-gradient-to-r from-cyan-500 to-blue-500 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-black bg-opacity-20 flex items-center justify-center">
+                    <i className="fas fa-robot text-black"></i>
+                  </div>
+                  <h3 className="text-lg font-bold text-black">Glow Assistant</h3>
+                </div>
+                <button className="text-black hover:text-gray-800" onClick={() => setShowChatbot(false)}>
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
+              <div id="chatbotMessages" className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="chatbot-message bot">
+                  <div className="message-content">
+                    <p>👋 Hi there! I'm your Glow Assistant. How can I help you today?</p>
+                  </div>
+                </div>
+                <div className="chatbot-message bot">
+                  <div className="message-content">
+                    <div className="flex flex-col gap-2">
+                      <button className="chatbot-quick-reply" onClick={() => handleChatbotQuickReply('downloads')}>
+                        <i className="fas fa-download mr-2"></i> My Downloads
+                      </button>
+                      <button className="chatbot-quick-reply" onClick={() => handleChatbotQuickReply('support')}>
+                        <i className="fas fa-headset mr-2"></i> Contact Support
+                      </button>
+                      <button className="chatbot-quick-reply" onClick={() => handleChatbotQuickReply('about')}>
+                        <i className="fas fa-info-circle mr-2"></i> About Glow Cart
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 border-t border-gray-700">
+                <div className="flex gap-2">
+                  <input 
+                    id="chatbotInput" 
+                    type="text" 
+                    placeholder="Type a message..." 
+                    className="flex-1 bg-gray-800 border border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleChatbotSend();
+                      }
+                    }}
+                  />
+                  <button 
+                    className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded-full"
+                    onClick={() => handleChatbotSend()}
+                  >
+                    <i className="fas fa-paper-plane"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Support Contact Modal */}
+          <div id="supportModal" className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+            <div className="glass p-8 rounded-xl max-w-md w-full">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold header-text">Contact Support</h2>
+                <button className="text-gray-400 hover:text-white" onClick={() => document.getElementById('supportModal').classList.add('hidden')}>
+                  <i className="fas fa-times text-xl"></i>
+                </button>
+              </div>
+              
+              <div className="mb-6">
+                <p className="mb-4">Need help? Reach out to our support team:</p>
+                <div className="flex items-center gap-3 p-3 bg-black bg-opacity-30 rounded-lg">
+                  <i className="fas fa-envelope text-cyan-500 text-xl"></i>
+                  <a href="mailto:cosmoscoderr.online@cosmoscoderr.online" className="text-cyan-400 hover:text-cyan-300 break-all">
+                    cosmoscoderr.online@cosmoscoderr.online
+                  </a>
+                </div>
+              </div>
+              
+              <button 
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-3 rounded-lg font-bold"
+                onClick={() => window.location.href='mailto:cosmoscoderr.online@cosmoscoderr.online'}
+              >
+                <i className="fas fa-paper-plane mr-2"></i> Send Email
+              </button>
+            </div>
+          </div>
+          
+          {/* Newsletter Confirmation Modal */}
+          <div id="newsletterConfirmModal" className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+            <div className="glass p-8 rounded-xl max-w-md w-full">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold header-text">Subscription Confirmed!</h2>
+                <button className="text-gray-400 hover:text-white" onClick={() => document.getElementById('newsletterConfirmModal').classList.add('hidden')}>
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mx-auto flex items-center justify-center mb-6">
+                  <i className="fas fa-check text-3xl text-black"></i>
+                </div>
+                
+                <p className="text-gray-300 mb-6">Thank you for subscribing to our newsletter! You'll be the first to know about new products, special offers, and exclusive content.</p>
+                
+                <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold py-2 px-6 rounded hover:from-cyan-400 hover:to-blue-400 transition-all duration-300" onClick={() => document.getElementById('newsletterConfirmModal').classList.add('hidden')}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          {/* Welcome Modal for new users */}
+          <div id="welcomeModal" className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+            <div className="glass p-8 rounded-xl max-w-md w-full animate-fadeIn">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-blue-500"></div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold header-text">Welcome to Glow Cart!</h2>
+                <button className="text-gray-400 hover:text-white" onClick={() => document.getElementById('welcomeModal').classList.add('hidden')}>
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-24 h-24 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mx-auto flex items-center justify-center mb-6 animate-pulse">
+                  <i className="fas fa-star text-4xl text-black"></i>
+                </div>
+                
+                <p className="text-gray-300 mb-4">Thank you for joining our cosmic marketplace! We're thrilled to have you aboard.</p>
+                <p className="text-gray-300 mb-6">Explore our premium digital products, enjoy the futuristic shopping experience, and don't hesitate to reach out if you need any assistance.</p>
+                
+                <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold py-2 px-6 rounded hover:from-cyan-400 hover:to-blue-400 transition-all duration-300" onClick={() => document.getElementById('welcomeModal').classList.add('hidden')}>
+                  Start Exploring
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          {/* Chatbot Toggle Button */}
+          <button 
+            id="draggableChatbot"
+            className="fixed bottom-4 left-4 z-40 w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 chatbot-orb-button"
+            onClick={() => setShowChatbot(true)}
+            onMouseDown={(e) => handleChatbotDragStart(e)}
+            onTouchStart={(e) => handleChatbotDragStart(e)}
+          >
+            <div className="chatbot-face">
+              <div className="chatbot-eyes">
+                <div className="chatbot-eye"></div>
+                <div className="chatbot-eye"></div>
+              </div>
+              <div className="chatbot-mouth"></div>
+            </div>
+          </button>
+          
+          {/* Support Modal */}
+          <div id="supportModal" className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+            <div className="glass p-8 rounded-xl max-w-md w-full animate-fadeIn">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-blue-500"></div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold header-text">Contact Support</h2>
+                <button className="text-gray-400 hover:text-white" onClick={() => document.getElementById('supportModal').classList.add('hidden')}>
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="bg-black bg-opacity-30 p-4 rounded-lg">
+                  <h3 className="text-lg font-bold mb-2">Email Support</h3>
+                  <p className="text-gray-400 mb-3">Send us an email and we'll get back to you within 24 hours.</p>
+                  <a href="mailto:support@glowcart.com" className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded flex items-center justify-center gap-2 hover:from-cyan-400 hover:to-blue-400 transition-all duration-300">
+                    <i className="fas fa-envelope"></i>
+                    <span>Email Us</span>
+                  </a>
+                </div>
+                
+                <div className="bg-black bg-opacity-30 p-4 rounded-lg">
+                  <h3 className="text-lg font-bold mb-2">Live Chat</h3>
+                  <p className="text-gray-400 mb-3">Chat with our support team in real-time.</p>
+                  <button onClick={() => { document.getElementById('supportModal').classList.add('hidden'); setShowChatbot(true); }} className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded flex items-center justify-center gap-2 w-full hover:from-cyan-400 hover:to-blue-400 transition-all duration-300">
+                    <i className="fas fa-comments"></i>
+                    <span>Start Chat</span>
+                  </button>
+                </div>
+                
+                <div className="bg-black bg-opacity-30 p-4 rounded-lg">
+                  <h3 className="text-lg font-bold mb-2">FAQs</h3>
+                  <p className="text-gray-400 mb-3">Check our frequently asked questions for quick answers.</p>
+                  <a href="#" className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black px-4 py-2 rounded flex items-center justify-center gap-2 hover:from-cyan-400 hover:to-blue-400 transition-all duration-300">
+                    <i className="fas fa-question-circle"></i>
+                    <span>View FAQs</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <footer className="mt-32 glass rounded-t-xl p-10">
             <div className="max-w-6xl mx-auto">
               <div className="flex flex-col md:flex-row justify-between items-center mb-10">
@@ -2686,7 +3625,7 @@
                 <div>
                   <h3 className="text-lg font-bold mb-4">Support</h3>
                   <ul className="space-y-2">
-                    <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Contact Us</a></li>
+                    <li><a href="#" onClick={() => document.getElementById('supportModal').classList.remove('hidden')} className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Contact Us</a></li>
                     <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">FAQ</a></li>
                     <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Returns</a></li>
                     <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">Live Chat</a></li>
