@@ -200,6 +200,48 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
+    /* Navigation and Scrolling Effects */
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.3s ease;
+      opacity: 0;
+      border-radius: 2px;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+      opacity: 1;
+    }
+    
+    .section-highlight {
+      animation: section-glow 1.5s ease-out;
+      position: relative;
+      z-index: 1;
+    }
+    
+    @keyframes section-glow {
+      0% { box-shadow: 0 0 0 rgba(0, 242, 254, 0); }
+      20% { box-shadow: 0 0 20px rgba(0, 242, 254, 0.4); }
+      60% { box-shadow: 0 0 30px rgba(0, 242, 254, 0.6); }
+      100% { box-shadow: 0 0 0 rgba(0, 242, 254, 0); }
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px; /* Account for fixed header */
+    }
+    
+    /* Smooth transition for all elements */
+    * {
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
     .card-3d:hover {
       transform: rotateY(10deg) rotateX(5deg) scale(1.05);
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 242, 254, 0.4);
@@ -1149,7 +1191,8 @@
         image: "kingkong.jpg", 
         fileUrl: "downloads/kingkong.pdf",
         featured: true,
-        tags: ["design", "template", "futuristic"]
+        tags: ["design", "template", "futuristic"],
+        mediaType: "image"
       },
       { 
         id: 2, 
@@ -1162,20 +1205,23 @@
         image: "https://images.unsplash.com/photo-1614149162883-504ce4d13909?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
         fileUrl: "downloads/alien-roar.mp3",
         featured: false,
-        tags: ["audio", "music", "cyberpunk"]
+        tags: ["audio", "music", "cyberpunk"],
+        mediaType: "audio",
+        previewUrl: "alien-roar.mp3"
       },
       { 
         id: 3, 
         title: "✨ Nebula Aura Template (Digital Download)", 
         price: 14.99, 
-        category: "Template", 
+        category: "Design", 
         rating: 4.9,
         reviews: 42,
         description: "Transform your website into a gateway to the cosmos with this mesmerizing space-themed template. Features a stunning nebula-inspired design with smooth gradient effects and a clean, modern layout. 🌌 Includes: Homepage template, custom space-themed icons, and nebula background assets. 📥 Instant download with setup guide.",
         image: "nebu.jpg", 
         fileUrl: "downloads/nebu.pdf",
         featured: true,
-        tags: ["web", "template", "space"]
+        tags: ["web", "template", "space"],
+        mediaType: "image"
       },
       { 
         id: 4, 
@@ -1188,20 +1234,22 @@
         image: "eve.jpg", 
         fileUrl: "downloads/eve.pdf",
         featured: false,
-        tags: ["art", "digital", "collection"]
+        tags: ["art", "digital", "collection"],
+        mediaType: "image"
       },
       { 
         id: 5, 
         title: "⚡ Holographic Anime UI Kit (Digital Download)", 
         price: 24.99, 
-        category: "UI/UX", 
+        category: "Design", 
         rating: 4.8,
         reviews: 52,
         description: "A sleek collection of holographic-style UI elements with a modern anime twist. Features clean, iridescent components that add a touch of futuristic flair to any interface. 🎨 Includes: Navigation menus, buttons, cards, and form elements with subtle rainbow effects. Perfect for: Modern websites, app interfaces, and digital projects. 📥 Instant download includes all source files.",
         image: "holo.jpg", 
         fileUrl: "downloads/holo.pdf",
         featured: true,
-        tags: ["ui", "design", "holographic"]
+        tags: ["ui", "design", "holographic"],
+        mediaType: "image"
       },
       { 
         id: 6, 
@@ -1214,33 +1262,98 @@
         image: "3d.jpg", 
         fileUrl: "downloads/3d.pdf",
         featured: false,
-        tags: ["3d", "space", "models"]
+        tags: ["3d", "space", "models"],
+        mediaType: "image"
+      },
+      { 
+        id: 7, 
+        title: "🎬 Cosmic Particles Video Background (Digital Download)", 
+        price: 12.99, 
+        category: "Video", 
+        rating: 4.8,
+        reviews: 33,
+        description: "Elevate your projects with this mesmerizing cosmic particles video background. Perfect for websites, presentations, and video productions. The slow-moving particles create a sense of depth and wonder against the deep space backdrop. 🎥 Features: 4K resolution, 30 seconds loop, multiple color variations included. 📥 Instant download in MP4 format.",
+        image: "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
+        fileUrl: "downloads/cosmic-particles.mp4",
+        featured: true,
+        tags: ["video", "background", "space"],
+        mediaType: "video",
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4"
+      },
+      { 
+        id: 8, 
+        title: "✨ Neon Glow UI Animation Pack (Digital Download)", 
+        price: 19.99, 
+        category: "GIF", 
+        rating: 4.7,
+        reviews: 24,
+        description: "Add futuristic flair to your interfaces with this collection of neon-styled UI animations. Each animation is designed to capture attention while maintaining a sleek, modern aesthetic. 🎨 Perfect for: Web interfaces, mobile apps, and digital presentations. 📥 Instant download includes GIF and JSON formats for Lottie animations.",
+        image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
+        fileUrl: "downloads/neon-animations.zip",
+        featured: false,
+        tags: ["gif", "ui", "neon"],
+        mediaType: "gif",
+        gifUrl: "https://media4.giphy.com/media/3o7ZeTmU77UlPyeR2w/giphy.gif"
       }
     ];
 
     // Navigation component
     const Navigation = ({ cart, setIsCartOpen, isCartOpen, currentUser, onOpenAuthModal, onSignOut }) => {
+      // Enhanced smooth scrolling function with subtle animation
+      const smoothScrollTo = (elementId) => {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        
+        // Highlight the section briefly with a glow effect
+        const addGlowEffect = () => {
+          element.classList.add('section-highlight');
+          setTimeout(() => {
+            element.classList.remove('section-highlight');
+          }, 1500);
+        };
+        
+        // Calculate offset to account for fixed header
+        const headerOffset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        // Smooth scroll with custom easing
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        
+        // Add glow effect after scrolling completes
+        setTimeout(addGlowEffect, 600);
+      };
+      
       // Scroll to cart section when cart icon is clicked
       const handleCartClick = () => {
         setIsCartOpen(!isCartOpen);
-        // Smooth scroll to cart section
-        const cartSection = document.getElementById('cart');
-        if (cartSection) {
-          cartSection.scrollIntoView({ behavior: 'smooth' });
+        smoothScrollTo('cart');
+      };
+      
+      // Handle navigation link clicks
+      const handleNavClick = (e, targetId) => {
+        e.preventDefault();
+        if (targetId === 'home') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          smoothScrollTo(targetId);
         }
       };
       
       return (
         <nav className="glass fixed top-0 left-0 right-0 z-50 px-6 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold header-text">Glow<span className="text-cyan-400">Cart</span></h1>
+            <h1 className="text-2xl font-bold header-text cursor-pointer" onClick={(e) => handleNavClick(e, 'home')}>Glow<span className="text-cyan-400">Cart</span></h1>
           </div>
           <div className="hidden md:flex space-x-6">
-            <a href="#" className="text-white hover:text-cyan-400 transition duration-300">Home</a>
-            <a href="#products" className="text-white hover:text-cyan-400 transition duration-300">Products</a>
-            <a href="#cart" className="text-white hover:text-cyan-400 transition duration-300">Cart</a>
+            <a href="#" className="text-white hover:text-cyan-400 transition duration-300 relative nav-link" onClick={(e) => handleNavClick(e, 'home')}>Home</a>
+            <a href="#products" className="text-white hover:text-cyan-400 transition duration-300 relative nav-link" onClick={(e) => handleNavClick(e, 'products')}>Products</a>
+            <a href="#cart" className="text-white hover:text-cyan-400 transition duration-300 relative nav-link" onClick={(e) => handleNavClick(e, 'cart')}>Cart</a>
             {currentUser && (
-              <a href="#purchases" className="text-white hover:text-cyan-400 transition duration-300">Purchases</a>
+              <a href="#purchases" className="text-white hover:text-cyan-400 transition duration-300 relative nav-link" onClick={(e) => handleNavClick(e, 'purchases')}>Purchases</a>
             )}
           </div>
           <div className="flex items-center space-x-4">
@@ -1674,12 +1787,51 @@
 
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="w-full md:w-1/2">
-                  <img 
-                    src={product.image} 
-                    alt={product.title}
-                    className="w-full h-64 object-cover rounded-lg"
-                  />
-                  {product.category === 'Audio' && (
+                  {product.mediaType === 'video' ? (
+                    <div className="rounded-lg overflow-hidden glass p-4">
+                      <h4 className="text-cyan-400 mb-2 flex items-center gap-2">
+                        <i className="fas fa-film"></i>
+                        <span>Video Preview</span>
+                      </h4>
+                      <video 
+                        src={product.videoUrl}
+                        controls
+                        autoPlay
+                        loop
+                        className="w-full h-64 object-cover rounded-lg neon-border"
+                      >
+                        Your browser does not support the video element.
+                      </video>
+                      <div className="mt-2 text-sm text-cyan-400 flex items-center justify-between">
+                        <span><i className="fas fa-info-circle mr-2"></i>4K resolution available</span>
+                        <span><i className="fas fa-clock mr-2"></i>30 second loop</span>
+                      </div>
+                    </div>
+                  ) : product.mediaType === 'gif' ? (
+                    <div className="rounded-lg overflow-hidden glass p-4">
+                      <h4 className="text-cyan-400 mb-2 flex items-center gap-2">
+                        <i className="fas fa-magic"></i>
+                        <span>GIF Animation</span>
+                      </h4>
+                      <img 
+                        src={product.gifUrl} 
+                        alt={product.title}
+                        className="w-full h-64 object-cover rounded-lg neon-border"
+                      />
+                      <div className="mt-2 text-sm text-cyan-400 flex items-center justify-between">
+                        <span><i className="fas fa-palette mr-2"></i>Animated UI elements</span>
+                        <span><i className="fas fa-bolt mr-2"></i>Ready to use</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <img 
+                      src={product.image} 
+                      alt={product.title}
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
+                  )}
+                  
+                  {product.mediaType === 'audio' && (
                     <div className="mt-4 glass p-4 rounded-lg">
                       <h4 className="text-cyan-400 mb-2 flex items-center gap-2">
                         <i className="fas fa-headphones"></i>
@@ -1747,12 +1899,48 @@
                   Featured
                 </div>
               )}
-              <img 
-                src={product.image} 
-                alt={product.title} 
-                className="w-full h-48 object-cover transition-transform duration-500 hover:scale-110 cursor-pointer" 
-                onClick={() => onPreview(product)}
-              />
+              {product.mediaType === 'video' ? (
+                <div className="relative group" onClick={() => onPreview(product)}>
+                  <video 
+                    src={product.videoUrl}
+                    poster={product.image}
+                    className="w-full h-48 object-cover cursor-pointer"
+                    muted
+                    loop
+                    onMouseOver={(e) => e.target.play()}
+                    onMouseOut={(e) => {e.target.pause(); e.target.currentTime = 0;}}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-black bg-opacity-50 rounded-full p-2">
+                      <i className="fas fa-play text-white"></i>
+                    </div>
+                  </div>
+                </div>
+              ) : product.mediaType === 'gif' ? (
+                <div className="relative group" onClick={() => onPreview(product)}>
+                  <img 
+                    src={product.image} 
+                    alt={product.title}
+                    className="w-full h-48 object-cover cursor-pointer group-hover:opacity-0 transition-opacity duration-300" 
+                  />
+                  <img 
+                    src={product.gifUrl} 
+                    alt={product.title}
+                    className="absolute inset-0 w-full h-48 object-cover cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                  />
+                  <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                    <i className="fas fa-magic mr-1"></i> Hover for animation
+                  </div>
+                </div>
+              ) : (
+                <img 
+                  src={product.image} 
+                  alt={product.title} 
+                  className="w-full h-48 object-cover transition-transform duration-500 hover:scale-110 cursor-pointer" 
+                  onClick={() => onPreview(product)}
+                />
+              )}
             </div>
             <div className="p-5 flex-grow flex flex-col card-content">
               <div className="flex justify-between items-start mb-2">
