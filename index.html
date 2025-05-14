@@ -40,6 +40,34 @@
       font-family: 'Inter', sans-serif;
     }
     
+    /* Audio Player Styles */
+    .custom-audio-player {
+      filter: hue-rotate(180deg) brightness(1.5);
+      border-radius: 20px;
+      background: rgba(0, 242, 254, 0.1);
+    }
+    
+    .custom-audio-player::-webkit-media-controls-panel {
+      background: rgba(10, 10, 35, 0.8);
+      border-radius: 20px;
+    }
+    
+    .custom-audio-player::-webkit-media-controls-play-button,
+    .custom-audio-player::-webkit-media-controls-mute-button {
+      filter: invert(1) hue-rotate(180deg);
+    }
+    
+    .custom-audio-player::-webkit-media-controls-current-time-display,
+    .custom-audio-player::-webkit-media-controls-time-remaining-display {
+      color: #00f2fe;
+    }
+    
+    .custom-audio-player::-webkit-media-controls-timeline {
+      background-color: rgba(0, 242, 254, 0.2);
+      border-radius: 10px;
+      height: 4px;
+    }
+    
     /* Scrollbar Styling */
     ::-webkit-scrollbar {
       width: 8px;
@@ -297,6 +325,8 @@
       transition: all 0.3s ease;
       cursor: move;
       touch-action: none; /* Prevents default touch actions like scrolling */
+      user-select: none; /* Prevents text selection */
+      -webkit-user-select: none;
     }
     
     /* Dragging styles */
@@ -342,6 +372,7 @@
       animation: pulsate 2s infinite ease-in-out;
       overflow: visible;
       position: relative;
+      pointer-events: auto; /* Ensure clicks are detected */
     }
     
     /* Cute robot face in button */
@@ -769,7 +800,7 @@
   <!-- Chatbot Component (Non-React) -->
   <div class="chatbot-container" id="chatbotContainer">
     <div class="chatbot-button" id="chatbotButton">
-      <div class="chatbot-button-text">Tap me! Tap me!</div>
+
       <div class="chatbot-face">
         <div class="chatbot-eyes">
           <div class="chatbot-eye"></div>
@@ -817,9 +848,7 @@
         let offsetX, offsetY;
         
         const startDrag = (e) => {
-          // Only allow dragging from the header or if the element itself is the container
-          if (e.target !== header && !header.contains(e.target) && e.target !== container) return;
-          
+          // Allow dragging from anywhere in the container
           isDragging = true;
           container.classList.add('dragging');
           
@@ -908,13 +937,13 @@
           }
         }
         
-        // Add event listeners
-        header.addEventListener('mousedown', startDrag);
+        // Add event listeners to the entire container
+        container.addEventListener('mousedown', startDrag);
         document.addEventListener('mousemove', drag);
         document.addEventListener('mouseup', endDrag);
         
         // Touch events for mobile
-        header.addEventListener('touchstart', startDrag, { passive: false });
+        container.addEventListener('touchstart', startDrag, { passive: false });
         document.addEventListener('touchmove', drag, { passive: false });
         document.addEventListener('touchend', endDrag);
         document.addEventListener('touchcancel', endDrag);
@@ -990,10 +1019,11 @@
       let hasExplainedPurpose = localStorage.getItem('chatbotPurposeExplained');
       let firstOpen = true;
       
-      // Toggle chatbot window
+      // Toggle chatbot window with improved click handling
       chatbotButton.addEventListener('click', (e) => {
         // Prevent the click from being interpreted as the start of a drag
         e.stopPropagation();
+        e.preventDefault();
         chatbotWindow.classList.toggle('active');
         
         // Show purpose explanation on first open
@@ -1110,79 +1140,79 @@
     const products = [
       { 
         id: 1, 
-        title: "Quantum Blueprint", 
+        title: "🔥 King Kong Vector Graphic Design (Digital Download)", 
         price: 9.99, 
         category: "Design", 
         rating: 4.7,
         reviews: 28,
-        description: "Advanced design templates with futuristic elements and cosmic themes.",
-        image: "https://images.unsplash.com/photo-1545231027-637d2f6210f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
-        fileUrl: "https://example.com/quantum-blueprint.pdf",
+        description: "Unleash the raw power of the mighty Kong in this meticulously crafted vector artwork. Every detail captures the iconic beast's fierce presence, from the intense expression to the dynamic pose. 🦍 Perfect for: T-shirts, posters, banners, social media, and brand projects. ✨ What's included: Layered vector files, high-res PNG/JPEG exports, and color variations. 📥 Instant digital download, ready for both print and digital use.",
+        image: "kingkong.jpg", 
+        fileUrl: "downloads/kingkong.pdf",
         featured: true,
         tags: ["design", "template", "futuristic"]
       },
       { 
         id: 2, 
-        title: "Neon Soundwave", 
+        title: "🎵 Sounds Beyond the Stars (Digital Download)", 
         price: 4.99, 
         category: "Audio", 
         rating: 4.3,
         reviews: 15,
-        description: "Cyberpunk-inspired audio samples and synthesizer presets for modern productions.",
+        description: "Journey through the cosmic soundscape where stellar winds whisper ancient secrets and nebulae hum their celestial lullabies. Each track captures the raw energy of newborn stars and the gentle pulse of distant galaxies. 🎧 Perfect for: Meditation, sci-fi projects, ambient backgrounds, and cosmic inspiration. 📥 Instant download includes: High-quality MP3s + bonus space ambience track.",
         image: "https://images.unsplash.com/photo-1614149162883-504ce4d13909?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
-        fileUrl: "https://example.com/neon-soundwave.mp3",
+        fileUrl: "downloads/alien-roar.mp3",
         featured: false,
         tags: ["audio", "music", "cyberpunk"]
       },
       { 
         id: 3, 
-        title: "Cosmic Template", 
+        title: "✨ Nebula Aura Template (Digital Download)", 
         price: 14.99, 
         category: "Template", 
         rating: 4.9,
         reviews: 42,
-        description: "Professional website template with space-themed design and smooth animations.",
-        image: "https://images.unsplash.com/photo-1581822261290-991b38693d1b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
-        fileUrl: "https://example.com/cosmic-template.zip",
+        description: "Transform your website into a gateway to the cosmos with this mesmerizing space-themed template. Features a stunning nebula-inspired design with smooth gradient effects and a clean, modern layout. 🌌 Includes: Homepage template, custom space-themed icons, and nebula background assets. 📥 Instant download with setup guide.",
+        image: "nebu.jpg", 
+        fileUrl: "downloads/nebu.pdf",
         featured: true,
         tags: ["web", "template", "space"]
       },
       { 
         id: 4, 
-        title: "Digital Art Pack", 
+        title: "🌍 The First Woman, with Infinite Shades (Digital Download)", 
         price: 19.99, 
         category: "Art", 
         rating: 4.5,
         reviews: 36,
-        description: "Collection of high-resolution digital artworks with cosmic and futuristic themes.",
-        image: "https://images.unsplash.com/photo-1634469875582-a0441d83d4b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
-        fileUrl: "https://example.com/digital-art-pack.zip",
+        description: "She Who Holds the Colors: A Portrait of Eve, Mother of Humanity,A powerful and symbolic digital portrait of Eve the first woman, the origin, the bearer of life and light.   🖼️ Perfect for: Wall art, prints, posters, spiritual decor, storytelling visuals and many more 📥 Instant digital download no physical item shipped.",
+        image: "eve.jpg", 
+        fileUrl: "downloads/eve.pdf",
         featured: false,
         tags: ["art", "digital", "collection"]
       },
       { 
         id: 5, 
-        title: "Holographic UI Kit", 
+        title: "⚡ Holographic Anime UI Kit (Digital Download)", 
         price: 24.99, 
         category: "UI/UX", 
         rating: 4.8,
         reviews: 52,
-        description: "Premium UI components with holographic effects for modern applications.",
-        image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
-        fileUrl: "https://example.com/holographic-ui.zip",
+        description: "A sleek collection of holographic-style UI elements with a modern anime twist. Features clean, iridescent components that add a touch of futuristic flair to any interface. 🎨 Includes: Navigation menus, buttons, cards, and form elements with subtle rainbow effects. Perfect for: Modern websites, app interfaces, and digital projects. 📥 Instant download includes all source files.",
+        image: "holo.jpg", 
+        fileUrl: "downloads/holo.pdf",
         featured: true,
         tags: ["ui", "design", "holographic"]
       },
       { 
         id: 6, 
-        title: "Nebula 3D Models", 
+        title: "   Fractal Citadel (Digital Download)", 
         price: 29.99, 
         category: "3D", 
         rating: 4.6,
         reviews: 19,
-        description: "Collection of detailed 3D models of nebulae and space phenomena.",
-        image: "https://images.unsplash.com/photo-1539321908154-04927596764d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", 
-        fileUrl: "https://example.com/nebula-3d.zip",
+        description: "Nestled within an endless void, the Fractal Citadel rises as a testament to the beauty of mathematical precision and otherworldly design, The citadel stands as a silent guardian of an unknown realm, inviting the viewer to lose themselves in its hypnotic depths, where chaos and order dance in perfect harmony. ✅ Usage: Personal and commercial use allowed, 📥 Instant digital download – no physical item shipped.",
+        image: "3d.jpg", 
+        fileUrl: "downloads/3d.pdf",
         featured: false,
         tags: ["3d", "space", "models"]
       }
@@ -1521,6 +1551,7 @@
       const [purchasedItems, setPurchasedItems] = useState([]);
       const [activeCategory, setActiveCategory] = useState('All');
       const [searchTerm, setSearchTerm] = useState('');
+      const [previewProduct, setPreviewProduct] = useState(null);
       const [isCartOpen, setIsCartOpen] = useState(false);
       const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
       const [activeAuthTab, setActiveAuthTab] = useState('signin');
@@ -1625,6 +1656,68 @@
       const featuredProducts = products.filter(product => product.featured);
 
       // Star rating component
+      const ProductPreviewModal = ({ product, onClose }) => {
+        if (!product) return null;
+        
+        return (
+          <div className="fixed inset-0 flex items-center justify-center z-50" onClick={onClose}>
+            <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+            <div className="glass relative rounded-xl w-full max-w-lg p-6 shadow-2xl shadow-cyan-500/20 animate-fadeIn" onClick={e => e.stopPropagation()}>
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-blue-500"></div>
+              
+              <button 
+                className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                onClick={onClose}
+              >
+                <i className="fas fa-times"></i>
+              </button>
+
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="w-full md:w-1/2">
+                  <img 
+                    src={product.image} 
+                    alt={product.title}
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                  {product.category === 'Audio' && (
+                    <div className="mt-4 glass p-4 rounded-lg">
+                      <h4 className="text-cyan-400 mb-2 flex items-center gap-2">
+                        <i className="fas fa-headphones"></i>
+                        <span>Preview Audio</span>
+                      </h4>
+                      <audio 
+                        controls 
+                        className="w-full custom-audio-player"
+                        src={product.previewUrl || product.fileUrl}
+                      >
+                        Your browser does not support the audio element.
+                      </audio>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="w-full md:w-1/2">
+                  <h3 className="text-2xl font-bold mb-2">{product.title}</h3>
+                  <p className="text-cyan-400 text-xl mb-4">${product.price.toFixed(2)}</p>
+                  <div className="flex items-center gap-2 mb-4">
+                    <StarRating rating={product.rating} />
+                    <span className="text-gray-400">({product.reviews} reviews)</span>
+                  </div>
+                  <p className="text-gray-300 mb-4">{product.description}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {product.tags.map(tag => (
+                      <span key={tag} className="px-3 py-1 rounded-full bg-gray-800 text-gray-300 text-sm">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
       const StarRating = ({ rating }) => {
         const fullStars = Math.floor(rating);
         const hasHalfStar = rating % 1 >= 0.5;
@@ -1645,7 +1738,7 @@
       };
 
       // Product card component
-      const ProductCard = ({ product }) => {
+      const ProductCard = ({ product, onPreview }) => {
         return (
           <div className="card-3d glass rounded-lg overflow-hidden transition-all duration-300 h-full flex flex-col">
             <div className="relative overflow-hidden">
@@ -1657,7 +1750,8 @@
               <img 
                 src={product.image} 
                 alt={product.title} 
-                className="w-full h-48 object-cover transition-transform duration-500 hover:scale-110" 
+                className="w-full h-48 object-cover transition-transform duration-500 hover:scale-110 cursor-pointer" 
+                onClick={() => onPreview(product)}
               />
             </div>
             <div className="p-5 flex-grow flex flex-col card-content">
@@ -1696,6 +1790,7 @@
 
       return (
         <div className="min-h-screen">
+          <ProductPreviewModal product={previewProduct} onClose={() => setPreviewProduct(null)} />
           <Navigation 
             cart={cart} 
             setIsCartOpen={setIsCartOpen} 
@@ -1726,7 +1821,7 @@
               </h2>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {featuredProducts.map(product => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={product.id} product={product} onPreview={setPreviewProduct} />
                 ))}
               </div>
             </div>
@@ -1764,7 +1859,7 @@
             {filteredProducts.length > 0 ? (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredProducts.map(product => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={product.id} product={product} onPreview={setPreviewProduct} />
                 ))}
               </div>
             ) : (
@@ -1913,18 +2008,6 @@
               <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                 <h2 className="text-3xl font-bold header-text mb-6 md:mb-0">Glow<span className="text-cyan-400">Cart</span></h2>
                 <div className="flex gap-6">
-                  <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">
-                    <i className="fab fa-twitter text-xl"></i>
-                  </a>
-                  <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">
-                    <i className="fab fa-instagram text-xl"></i>
-                  </a>
-                  <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">
-                    <i className="fab fa-github text-xl"></i>
-                  </a>
-                  <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors duration-300">
-                    <i className="fab fa-discord text-xl"></i>
-                  </a>
                 </div>
               </div>
               
